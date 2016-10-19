@@ -1,0 +1,23 @@
+/**
+ * Give aweber Admin Styles
+ */
+
+.give-aweber-list-wrap {
+	border: 1px solid #ccc;
+	background: #FDFDFD;
+	width: auto;
+	height: 200px;
+	overflow-y: scroll;
+	padding: 7px 10px;
+}
+
+.give-aweber-list-wrap label {
+	display: block;
+	margin-bottom: 3px;
+}
+
+.give-aweber-list-wrap label.group {
+	margin-left: 30px;
+	font-size: 13px;
+	font-style: italic;
+}

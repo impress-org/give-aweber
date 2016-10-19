@@ -51,11 +51,49 @@ class Give_Aweber {
 		add_action( 'give_purchase_form_before_submit', array( $this, 'form_fields' ), 100, 1 );
 		add_action( 'give_insert_payment', array( $this, 'completed_donation_signup' ), 10, 2 );
 
+		//Scripts.
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ), 100 );
+
 		//Donation metabox.
 		add_filter( 'give_view_order_details_totals_after', array( $this, 'donation_metabox_notification' ), 10, 1 );
 
 		//Get it started.
 		add_action( 'init', array( $this, 'init' ) );
+
+
+	}
+
+	/**
+	 * Load Admin Scripts
+	 *
+	 * Enqueues the required admin scripts.
+	 *
+	 * @since 1.0
+	 * @global       $post
+	 *
+	 * @param string $hook Page hook
+	 *
+	 * @return void
+	 */
+	public function admin_scripts( $hook ) {
+
+		global $post_type;
+
+		//Directories of assets.
+		$js_dir     = GIVE_AWEBER_URL . 'assets/js/admin/';
+		$css_dir    = GIVE_AWEBER_URL . 'assets/css/admin/';
+
+		//Forms CPT Script.
+		if ( $post_type === 'give_forms' ) {
+
+			//CSS.
+			wp_register_style( 'give-' . $this->id . '-admin-css', $css_dir . 'admin-forms.css', GIVE_AWEBER_VERSION );
+			wp_enqueue_style( 'give-' . $this->id . '-admin-css' );
+
+			//JS.
+			wp_register_script( 'give-' . $this->id . '-admin-forms-scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_AWEBER_VERSION, false );
+			wp_enqueue_script( 'give-' . $this->id . '-admin-forms-scripts' );
+		}
 
 
 	}
@@ -112,8 +150,8 @@ class Give_Aweber {
 		$enable_on_form  = get_post_meta( $form_id, '_give_' . $this->id . '_enable', true );
 		$disable_on_form = get_post_meta( $form_id, '_give_' . $this->id . '_disable', true );
 
-		//Check disable vars to see if this form should have the MC Opt-in field
-		if ( ! $this->show_subscribe_checkbox() && $enable_on_form !== 'true' || $disable_on_form === 'true' ) {
+		//Check disable vars to see if this form should have the Opt-in field.
+		if ( ! $this->show_subscribe_checkbox_globally() && $enable_on_form !== 'true' || $disable_on_form === 'true' ) {
 			return;
 		}
 
@@ -136,8 +174,8 @@ class Give_Aweber {
 		if ( ! empty( $form_option ) ) {
 			//Nothing to do here, option already set above.
 			$checked_option = $form_option;
-		} elseif ( ! empty( $this->give_options['give_' . $this->id . '_label'] ) ) {
-			$checked_option = $this->give_options['give_' . $this->id . '_checked_default'];
+		} elseif ( ! empty( $this->give_options[ 'give_' . $this->id . '_label' ] ) ) {
+			$checked_option = $this->give_options[ 'give_' . $this->id . '_checked_default' ];
 		}
 
 		ob_start(); ?>
@@ -269,7 +307,7 @@ class Give_Aweber {
 		ob_start();
 
 		//Output option for this form
-		if ( $globally_enabled == 'on' ) { ?>
+		if ( $globally_enabled == 'enabled' ) { ?>
 			<p style="margin: 1em 0 0;">
 				<label>
 					<input type="checkbox" name="_give_<?php echo $this->id; ?>_disable"
@@ -280,7 +318,7 @@ class Give_Aweber {
 
 			<?php
 		} else {
-			//Output option to ENABLE MC for this form
+			//Output option to disable newsletter for this form.
 			?>
 			<p style="margin: 1em 0 0;">
 				<label>
@@ -295,7 +333,7 @@ class Give_Aweber {
 			<p>
 				<label for="_give_<?php echo $this->id; ?>_custom_label"
 				       style="font-weight:bold;"><?php _e( 'Custom Label', 'give-aweber' ); ?></label>
-				<span class="cmb2-metabox-description"
+				<span class="cmb2-metabox-description give-description"
 				      style="margin: 0 0 10px;"><?php echo sprintf( __( 'Customize the label for the %1$s opt-in checkbox', 'give-aweber' ), $this->label ); ?></span>
 				<input type="text" id="_give_<?php echo $this->id; ?>_custom_label"
 				       name="_give_<?php echo $this->id; ?>_custom_label"
@@ -402,7 +440,7 @@ class Give_Aweber {
 		}
 
 		// Verify that the nonce is valid.
-		if ( ! wp_verify_nonce( $_POST['give_' . $this->id . '_meta_box_nonce'], 'give_' . $this->id . '_meta_box' ) ) {
+		if ( ! wp_verify_nonce( $_POST[ 'give_' . $this->id . '_meta_box_nonce' ], 'give_' . $this->id . '_meta_box' ) ) {
 			return false;
 		}
 
@@ -429,11 +467,11 @@ class Give_Aweber {
 		// OK, its safe for us to save the data now.
 
 		// Sanitize the user input.
-		$give_custom_label = isset( $_POST['_give_' . $this->id . '_custom_label'] ) ? sanitize_text_field( $_POST['_give_' . $this->id . '_custom_label'] ) : '';
-		$give_custom_lists = isset( $_POST['_give_' . $this->id . ''] ) ? $_POST['_give_' . $this->id . ''] : $this->give_options['give_' . $this->id . '_list'];
-		$give_subscribe_enable       = isset( $_POST['_give_' . $this->id . '_enable'] ) ? esc_html( $_POST['_give_' . $this->id . '_enable'] ) : '';
-		$give_subscribe_disable      = isset( $_POST['_give_' . $this->id . '_disable'] ) ? esc_html( $_POST['_give_' . $this->id . '_disable'] ) : '';
-		$give_subscribe_checked      = isset( $_POST['_give_' . $this->id . '_checked_default'] ) ? esc_html( $_POST['_give_' . $this->id . '_checked_default'] ) : '';
+		$give_custom_label      = isset( $_POST[ '_give_' . $this->id . '_custom_label' ] ) ? sanitize_text_field( $_POST[ '_give_' . $this->id . '_custom_label' ] ) : '';
+		$give_custom_lists      = isset( $_POST[ '_give_' . $this->id . '' ] ) ? $_POST[ '_give_' . $this->id . '' ] : $this->give_options[ 'give_' . $this->id . '_list' ];
+		$give_subscribe_enable  = isset( $_POST[ '_give_' . $this->id . '_enable' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_enable' ] ) : '';
+		$give_subscribe_disable = isset( $_POST[ '_give_' . $this->id . '_disable' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_disable' ] ) : '';
+		$give_subscribe_checked = isset( $_POST[ '_give_' . $this->id . '_checked_default' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_checked_default' ] ) : '';
 
 
 		// Update the meta field.
@@ -527,7 +565,7 @@ class Give_Aweber {
 				'size' => 'regular'
 			),
 			array(
-				'id'      => 'give_aweber_checkout_signup',
+				'id'      => 'give_aweber_show_subscribe_checkbox',
 				'name'    => __( 'Enable Globally', 'give-aweber' ),
 				'desc'    => __( 'Allow donors to sign up for the list selected below on all donation forms? Note: the list(s) can be customized per form.', 'give-aweber' ),
 				'type'    => 'radio_inline',
@@ -576,9 +614,9 @@ class Give_Aweber {
 	 *
 	 * @return bool
 	 */
-	public function show_subscribe_checkbox() {
+	public function show_subscribe_checkbox_globally() {
 
-		return ! empty( $this->give_options['give_' . $this->id . '_checkout_signup'] );
+		return ! empty( $this->give_options[ 'give_' . $this->id . '_checkout_signup' ] );
 
 	}
 
