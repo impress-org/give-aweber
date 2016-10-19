@@ -1,2 +1,3 @@
-# Give-Aweber
-Integrate MailChimp with your Give donation forms
+# Give - Aweber
+
+Integrate Aweber with your Give donation forms.
