@@ -1,7 +1,6 @@
-/*!
+/**
  * Give Aweber Admin Forms JS
  *
- * @description: The Give Admin Forms scripts. Only enqueued on the give_forms CPT; used to validate fields, show/hide, and other functions
  * @package:     Give
  * @subpackage:  Assets/JS
  * @copyright:   Copyright (c) 2016, WordImpress
@@ -9,7 +8,7 @@
  */
 
 jQuery.noConflict();
-(function ( $ ) {
+(function ($) {
 
 	/**
 	 * Toggle Conditional Form Fields
@@ -18,43 +17,35 @@ jQuery.noConflict();
 	 */
 	var toggle_aweber_fields = function () {
 
+		var aweber_option = $('input[name="_give_aweber_override_option"]');
 
-		var aweber_enable_option = $( '.give-aweber-enable' );
-		var aweber_disable_option = $( '.give-aweber-disable' );
+		aweber_option.on('change', function () {
 
-		aweber_enable_option.on( 'change', function () {
+			var aweber_option_val = $(this).filter(':checked').val();
 
-			var aweber_enable_option_val = $(this ).prop('checked');
+			if(typeof aweber_option_val == 'undefined') {
+				return;
+			}
+			
+			console.log(aweber_option_val);
 
-			if ( aweber_enable_option_val === false ) {
-				$( '.give-aweber-field-wrap' ).slideUp('fast');
+			if (aweber_option_val === 'disable' || aweber_option_val == 'default') {
+				$('.give-aweber-field-wrap').hide();
 			} else {
-				$( '.give-aweber-field-wrap' ).slideDown('fast');
+				$('.give-aweber-field-wrap').show();
 			}
 
-		} ).change();
-
-		aweber_disable_option.on( 'change', function () {
-
-			var aweber_disable_option_val = $(this ).prop('checked');
-
-			if ( aweber_disable_option_val === false ) {
-				$( '.give-aweber-field-wrap' ).slideDown('fast');
-			} else {
-				$( '.give-aweber-field-wrap' ).slideUp('fast');
-			}
-
-		} ).change();
+		}).change();
 
 	};
 
 
 	//On DOM Ready
-	$( function () {
+	$(function () {
 
 		toggle_aweber_fields();
 
-	} );
+	});
 
 
-})( jQuery );
+})(jQuery);

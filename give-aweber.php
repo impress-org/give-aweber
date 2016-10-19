@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Give - Aweber
+ * Plugin Name: Give - AWeber
  * Plugin URL: https://givewp.com/addons/aweber/
- * Description: Easily integrate Aweber opt-ins within your Give donation forms.
+ * Description: Easily integrate AWeber opt-ins within your Give donation forms.
  * Version: 1.0
  * Author: WordImpress
  * Author URI: https://wordimpress.com
