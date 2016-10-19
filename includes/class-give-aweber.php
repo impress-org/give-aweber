@@ -176,11 +176,11 @@ class Give_AWeber {
 		}
 
 		ob_start(); ?>
-		<fieldset id="give_<?php echo $this->id; ?>" class="give-<?php echo $this->id; ?>-fieldset">
+		<fieldset id="give_<?php echo $this->id . '_' . $form_id; ?>" class="give-<?php echo $this->id; ?>-fieldset">
 			<p>
-				<input name="give_<?php echo $this->id; ?>_signup" id="give_<?php echo $this->id; ?>_signup"
+				<input name="give_<?php echo $this->id; ?>_signup" id="give_<?php echo $this->id . '_' . $form_id; ?>_signup"
 				       type="checkbox" <?php echo( $checked_option !== 'no' ? 'checked="checked"' : '' ); ?>/>
-				<label for="give_<?php echo $this->id; ?>_signup"><?php echo $this->checkbox_label; ?></label>
+				<label for="give_<?php echo $this->id . '_' . $form_id; ?>_signup"><?php echo $this->checkbox_label; ?></label>
 			</p>
 		</fieldset>
 		<?php
