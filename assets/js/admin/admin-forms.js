@@ -26,10 +26,8 @@ jQuery.noConflict();
 			if(typeof aweber_option_val == 'undefined') {
 				return;
 			}
-			
-			console.log(aweber_option_val);
 
-			if (aweber_option_val === 'disable' || aweber_option_val == 'default') {
+			if (aweber_option_val === 'disabled' || aweber_option_val == 'default') {
 				$('.give-aweber-field-wrap').hide();
 			} else {
 				$('.give-aweber-field-wrap').show();

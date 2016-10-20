@@ -99,18 +99,6 @@ class Give_AWeber {
 	}
 
 	/**
-	 * Retrieve groups for a list
-	 *
-	 * @param  string $list_id List id for which groupings should be returned
-	 *
-	 * @return array  $groups_data Data about the groups
-	 */
-	public function get_groupings( $list_id = '' ) {
-		return array();
-	}
-
-
-	/**
 	 * Load the plugin's textdomain
 	 */
 	public function textdomain() {
@@ -154,33 +142,36 @@ class Give_AWeber {
 
 		$this->give_options    = give_get_settings();
 		$custom_checkbox_label = get_post_meta( $form_id, '_give_' . $this->id . '_custom_label', true );
+		$override_option       = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
+		$this->checkbox_label  = __( 'Subscribe to our newsletter', 'give-aweber' );
 
 		//What's the label gonna be?
-		if ( ! empty( $custom_checkbox_label ) ) {
+		if ( ! empty( $custom_checkbox_label ) && $override_option !== 'default' ) {
 			$this->checkbox_label = trim( $custom_checkbox_label );
 		} elseif ( ! empty( $this->give_options[ 'give_' . $this->id . '_label' ] ) ) {
 			$this->checkbox_label = trim( $this->give_options[ 'give_' . $this->id . '_label' ] );
-		} else {
-			$this->checkbox_label = __( 'Subscribe to our newsletter', 'give-aweber' );
 		}
 
-		//Should the opt-on be checked or unchecked by default?
-		$form_option    = get_post_meta( $form_id, '_give_' . $this->id . '_checked_default', true );
-		$checked_option = 'on';
+		//What's the check gonna be? Should the opt-on be checked or unchecked by default...
+		$form_checked_option   = get_post_meta( $form_id, '_give_' . $this->id . '_checked_default', true );
+		$global_checked_option = $this->give_options[ 'give_' . $this->id . '_checked_default' ];
+		$checked_option        = 'enabled';
 
-		if ( ! empty( $form_option ) ) {
+		if ( ! empty( $form_checked_option ) && $override_option !== 'default' ) {
 			//Nothing to do here, option already set above.
-			$checked_option = $form_option;
-		} elseif ( ! empty( $this->give_options[ 'give_' . $this->id . '_label' ] ) ) {
-			$checked_option = $this->give_options[ 'give_' . $this->id . '_checked_default' ];
+			$checked_option = $form_checked_option;
+		} elseif ( ! empty( $global_checked_option ) ) {
+			$checked_option = $global_checked_option;
 		}
 
 		ob_start(); ?>
 		<fieldset id="give_<?php echo $this->id . '_' . $form_id; ?>" class="give-<?php echo $this->id; ?>-fieldset">
 			<p>
-				<input name="give_<?php echo $this->id; ?>_signup" id="give_<?php echo $this->id . '_' . $form_id; ?>_signup"
-				       type="checkbox" <?php echo( $checked_option !== 'no' ? 'checked="checked"' : '' ); ?>/>
-				<label for="give_<?php echo $this->id . '_' . $form_id; ?>_signup"><?php echo $this->checkbox_label; ?></label>
+				<input name="give_<?php echo $this->id; ?>_signup"
+				       id="give_<?php echo $this->id . '_' . $form_id; ?>_signup"
+				       type="checkbox" <?php echo( $checked_option !== 'disabled' ? 'checked="checked"' : '' ); ?>/>
+				<label
+					for="give_<?php echo $this->id . '_' . $form_id; ?>_signup"><?php echo $this->checkbox_label; ?></label>
 			</p>
 		</fieldset>
 		<?php
@@ -202,16 +193,19 @@ class Give_AWeber {
 			return;
 		}
 
-		$form_lists = get_post_meta( $payment_data['give_form_id'], '_give_' . $this->id, true );
+		$form_id         = give_get_payment_form_id( $payment_id );
+		$override_option = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
+		$form_lists      = get_post_meta( $form_id, '_give_' . $this->id, true );
 
-		//Check if $form_lists is set.
-		if ( empty( $form_lists ) ) {
+		//Use custom lists from this form?
+		if ( $override_option !== 'customize' || empty( $form_lists ) ) {
 			//Not set so use global list.
 			$form_lists = array( 0 => give_get_option( 'give_' . $this->id . '_list' ) );
 		}
 
 		//Add meta to the donation post that this donation opted-in to.
 		add_post_meta( $payment_id, '_give_' . $this->id . '_donation_optin_status', $form_lists );
+
 
 		//Subscribe if array.
 		if ( is_array( $form_lists ) ) {
@@ -226,6 +220,69 @@ class Give_AWeber {
 		}
 
 	}
+
+	/**
+	 * Subscribe an email to a list.
+	 *
+	 * @param array $user_info
+	 * @param bool $list_id
+	 *
+	 * @return bool
+	 */
+	public function subscribe_email( $user_info = array(), $list_id = false ) {
+
+		// Retrieve the global list ID if none is provided.
+		if ( ! $list_id ) {
+			$list_id = ! empty( $this->give_options['give_aweber_list'] ) ? $this->give_options['give_aweber_list'] : false;
+
+			if ( ! $list_id ) {
+				return false;
+			}
+		}
+
+		$authorization_code = isset( $this->give_options['give_aweber_api'] ) ? trim( $this->give_options['give_aweber_api'] ) : '';
+
+		if ( strlen( $authorization_code ) > 0 ) {
+
+			//Get API.
+			if ( ! class_exists( 'AWeberAPI' ) ) {
+				require_once( GIVE_AWEBER_PATH . '/aweber/aweber_api.php' );
+			}
+
+			$aweber = $this->get_authenticated_instance();
+
+			if ( ! is_object( $aweber ) || false === ( $secrets = get_option( 'give_aweber_secrets' ) ) ) {
+				return false;
+			}
+
+			try {
+
+				$account = $aweber->getAccount( $secrets['access_key'], $secrets['access_secret'] );
+				$listURL = "/accounts/{$account->id}/lists/{$list_id}";
+				$list    = $account->loadFromUrl( $listURL );
+
+				//create a subscriber.
+				$params         = array(
+					'email' => $user_info['email'],
+					'name'  => $user_info['first_name'] . ' ' . $user_info['last_name']
+				);
+				$subscribers    = $list->subscribers;
+				$new_subscriber = $subscribers->create( $params );
+
+				//success!
+				return true;
+
+			} catch ( AWeberAPIException $exc ) {
+
+
+			}
+
+		}
+
+		return false;
+
+	}
+
 
 	/**
 	 * Show Line item on donation details screen if the donor opted-in to the newsletter.
@@ -285,6 +342,8 @@ class Give_AWeber {
 		<div class="give-<?php echo $this->id; ?>-global-override-wrap">
 			<label for="_give_<?php echo $this->id; ?>_custom_label"
 			       style="font-weight:bold;"><?php _e( 'AWeber Options', 'give-aweber' ); ?></label>
+			<span class="cmb2-metabox-description give-description"
+			      style="margin: 0 0 10px;"><?php _e( 'Customize the options for this form or use the default global settings.', 'give-aweber' ); ?></span>
 			<ul class="cmb2-radio-list cmb2-list">
 
 				<li>
@@ -305,9 +364,9 @@ class Give_AWeber {
 				<li>
 					<input type="radio" class="cmb2-option" name="_give_<?php echo $this->id; ?>_override_option"
 					       id="give_<?php echo $this->id; ?>_override_option3"
-					       value="disable" <?php echo checked( 'disable', $override_option, false ); ?>>
+					       value="disabled" <?php echo checked( 'disabled', $override_option, false ); ?>>
 					<label
-						for="give_<?php echo $this->id; ?>_override_option3"><?php _e( 'Disable', 'give-aweber' ); ?></label>
+						for="give_<?php echo $this->id; ?>_override_option3"><?php _e( 'Disabled', 'give-aweber' ); ?></label>
 				</li>
 			</ul>
 		</div>
@@ -321,7 +380,7 @@ class Give_AWeber {
 				<input type="text" id="_give_<?php echo $this->id; ?>_custom_label"
 				       name="_give_<?php echo $this->id; ?>_custom_label"
 				       value="<?php echo esc_attr( $custom_label ); ?>"
-				       placeholder="<?php echo esc_attr( $global_label ); ?>" size="35"/>
+				       placeholder="<?php echo esc_attr( $global_label ); ?>" style="width:100%;"/>
 			</p>
 
 			<?php //Field: Default checked or unchecked option. ?>
@@ -345,14 +404,14 @@ class Give_AWeber {
 					<li>
 						<input type="radio" class="cmb2-option" name="_give_<?php echo $this->id; ?>_checked_default"
 						       id="give_<?php echo $this->id; ?>_checked_default2"
-						       value="yes" <?php echo checked( 'yes', $checked_option, false ); ?>>
+						       value="enabled" <?php echo checked( 'enabled', $checked_option, false ); ?>>
 						<label
 							for="give_<?php echo $this->id; ?>_checked_default2"><?php _e( 'Checked', 'give-aweber' ); ?></label>
 					</li>
 					<li>
 						<input type="radio" class="cmb2-option" name="_give_<?php echo $this->id; ?>_checked_default"
 						       id="give_<?php echo $this->id; ?>_checked_default3"
-						       value="no" <?php echo checked( 'no', $checked_option, false ); ?>>
+						       value="disabled" <?php echo checked( 'disabled', $checked_option, false ); ?>>
 						<label
 							for="give_<?php echo $this->id; ?>_checked_default3"><?php _e( 'Unchecked', 'give-aweber' ); ?></label>
 					</li>
@@ -360,7 +419,7 @@ class Give_AWeber {
 
 			</div>
 
-			<?php //Field: lists and groups. ?>
+			<?php //Field: subscription lists. ?>
 			<div class="give-<?php echo $this->id; ?>-list-container">
 				<label for="give_<?php echo $this->id; ?>_lists"
 				       style="font-weight:bold;"><?php _e( 'Aweber Opt-in', 'give-aweber' ); ?></label>
@@ -373,24 +432,15 @@ class Give_AWeber {
 
 				<div class="give-<?php echo $this->id; ?>-list-wrap">
 
-					<?php foreach ( $this->get_lists() as $list_id => $list_name ) { ?>
+					<?php foreach ( $this->get_lists() as $list_id => $list_name ) : ?>
+
 						<label class="list">
 							<input type="checkbox" name="_give_<?php echo esc_attr( $this->id ); ?>[]"
 							       value="<?php echo esc_attr( $list_id ); ?>" <?php echo checked( true, in_array( $list_id, $checked ), false ); ?>>
 							<span><?php echo $list_name; ?></span>
 						</label>
 
-						<?php $groupings = $this->get_groupings( $list_id );
-						if ( ! empty( $groupings ) ) {
-							foreach ( $groupings as $group_id => $group_name ) { ?>
-								<label class="group">
-									<input type="checkbox" name="_give_<?php echo esc_attr( $this->id ); ?>[]"
-									       value="<?php echo esc_attr( $group_id ); ?>" <?php echo checked( true, in_array( $group_id, $checked ), false ); ?>>
-									<span><?php echo $group_name; ?></span>
-								</label>
-							<?php }
-						}
-					} ?>
+					<?php endforeach; ?>
 
 				</div><!-- give-aweber-list-wrap -->
 			</div> <!-- give-aweber-list-container -->
@@ -492,7 +542,7 @@ class Give_AWeber {
 
 				$aweber = $this->get_authenticated_instance();
 
-				if ( ! is_object( $aweber ) || false === ( $secrets = get_option( 'aweber_secrets' ) ) ) {
+				if ( ! is_object( $aweber ) || false === ( $secrets = get_option( 'give_aweber_secrets' ) ) ) {
 					return array();
 				}
 
@@ -538,7 +588,7 @@ class Give_AWeber {
 			array(
 				'id'   => 'give_aweber_api',
 				'name' => __( 'AWeber Authorization Code', 'give-aweber' ),
-				'desc' => sprintf( __( 'Enter your <a href="%s" target="_blank" title="Will open new window">AWeber Authorization Code</a>', 'give-aweber' ), 'https://auth.aweber.com/1.0/oauth/authorize_app/12d8f5e5' ),
+				'desc' => sprintf( __( 'Retrieve your <a href="%s" target="_blank" title="Will open new window">AWeber Authorization Code</a> and paste it above then save to enable the AWeber integration.', 'give-aweber' ), 'https://auth.aweber.com/1.0/oauth/authorize_app/12d8f5e5' ),
 				'type' => 'text',
 				'size' => 'regular'
 			),
@@ -573,7 +623,7 @@ class Give_AWeber {
 				'type'    => 'radio_inline'
 			),
 			array(
-				'id'         => 'give_awebere_label',
+				'id'         => 'give_aweber_label',
 				'name'       => __( 'Default Label', 'give-aweber' ),
 				'desc'       => __( 'This is the text shown next to the signup option. This can also be customized per form.', 'give-aweber' ),
 				'type'       => 'text',
@@ -596,90 +646,22 @@ class Give_AWeber {
 	 */
 	public function show_subscribe_checkbox( $form_id ) {
 
-		$enable_on_form  = get_post_meta( $form_id, '_give_' . $this->id . '_enable', true );
-		$disable_on_form = get_post_meta( $form_id, '_give_' . $this->id . '_disable', true );
+		$override_option = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
 		$global_option   = $this->give_options[ 'give_' . $this->id . '_show_subscribe_checkbox' ];
 
 		//Is disabled on the form?
-		if ( $disable_on_form == 'true' ) {
+		if ( $override_option == 'disabled' ) {
 			return false;
-		} elseif ( $global_option == 'disabled' && $enable_on_form == 'true' ) {
-			//Is globally disabled, but enabled on the form?
-			return true;
-		} elseif ( $global_option == 'enabled' && $enable_on_form !== 'true' ) {
-			//Is globally enabled, but disabled on the form?
-			return true;
-		} elseif ( $global_option == 'enabled' || $enable_on_form == 'true' ) {
-			//Is globally enabled OR enabled on the form?
-			return true;
+		} elseif ( $global_option == 'disabled' && $override_option == 'default' ) {
+			//Global option disabled?
+			return false;
 		} else {
-			//Default to false.
-			return false;
+			//Default to true.
+			return true;
 		}
 
 	}
 
-	/**
-	 * Subscribe an email to a list.
-	 *
-	 * @param array $user_info
-	 * @param bool $list_id
-	 *
-	 * @return bool
-	 */
-	public function subscribe_email( $user_info = array(), $list_id = false ) {
-
-		// Retrieve the global list ID if none is provided.
-		if ( ! $list_id ) {
-			$list_id = ! empty( $this->give_options['give_aweber_list'] ) ? $this->give_options['give_aweber_list'] : false;
-
-			if ( ! $list_id ) {
-				return false;
-			}
-		}
-
-		$authorization_code = isset( $this->give_options['give_aweber_api'] ) ? trim( $this->give_options['give_aweber_api'] ) : '';
-
-		if ( strlen( $authorization_code ) > 0 ) {
-
-			//Get API.
-			if ( ! class_exists( 'AWeberAPI' ) ) {
-				require_once( GIVE_AWEBER_PATH . '/aweber/aweber_api.php' );
-			}
-
-			$aweber = $this->get_authenticated_instance();
-
-			if ( ! is_object( $aweber ) || false === ( $secrets = get_option( 'aweber_secrets' ) ) ) {
-				return false;
-			}
-
-			try {
-
-				$account = $aweber->getAccount( $secrets['access_key'], $secrets['access_secret'] );
-				$listURL = "/accounts/{$account->id}/lists/{$list_id}";
-				$list    = $account->loadFromUrl( $listURL );
-
-				//create a subscriber.
-				$params         = array(
-					'email' => $user_info['email'],
-					'name'  => $user_info['first_name'] . ' ' . $user_info['last_name']
-				);
-				$subscribers    = $list->subscribers;
-				$new_subscriber = $subscribers->create( $params );
-
-				//success!
-				return true;
-
-			} catch ( AWeberAPIException $exc ) {
-				return false;
-			}
-
-		}
-
-
-		return false;
-
-	}
 
 	/**
 	 * Get authenticated instance.
@@ -699,9 +681,9 @@ class Give_AWeber {
 
 			$error_code = "";
 
-			if ( false !== get_option( 'aweber_secrets' ) ) {
+			if ( false !== get_option( 'give_aweber_secrets' ) ) {
 
-				$options = get_option( 'aweber_secrets' );
+				$options = get_option( 'give_aweber_secrets' );
 				$msg     = $options;
 
 				try {
@@ -726,10 +708,10 @@ class Give_AWeber {
 
 					list( $consumer_key, $consumer_secret, $access_key, $access_secret ) = null;
 
-					# make error messages customer friendly.
+					//make error messages customer friendly.
 					$descr      = $exc->message;
-					$descr      = preg_replace( '/http.*$/i', '', $descr );     # strip labs.aweber.com documentation url from error message
-					$descr      = preg_replace( '/[\.\!:]+.*$/i', '', $descr ); # strip anything following a . : or ! character
+					$descr      = preg_replace( '/http.*$/i', '', $descr );    //strip labs.aweber.com documentation url from error message
+					$descr      = preg_replace( '/[\.\!:]+.*$/i', '', $descr ); //strip anything following a . : or ! character
 					$error_code = " ($descr)";
 
 				} catch ( AWeberOAuthDataMissing $exc ) {
@@ -768,16 +750,16 @@ class Give_AWeber {
 						'access_secret'   => $access_secret,
 					);
 
-					update_option( 'aweber_secrets', $secrets );
+					update_option( 'give_aweber_secrets', $secrets );
 				}
 			}
 		} else {
-			delete_option( 'aweber_secrets' );
+			delete_option( 'give_aweber_secrets' );
 		}
 
 		$msg = isset( $msg ) ? $msg : '';
 
-		update_option( 'aweber_response', $msg );
+		update_option( 'give_aweber_response', $msg );
 
 	}
 
