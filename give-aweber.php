@@ -13,13 +13,6 @@
 if ( ! defined( 'GIVE_AWEBER_VERSION' ) ) {
 	define( 'GIVE_AWEBER_VERSION', '1.0' );
 }
-if ( ! defined( 'GIVE_AWEBER_STORE_API_URL' ) ) {
-	define( 'GIVE_AWEBER_STORE_API_URL', 'https://givewp.com' );
-}
-
-if ( ! defined( 'GIVE_AWEBER_PRODUCT_NAME' ) ) {
-	define( 'GIVE_AWEBER_PRODUCT_NAME', 'AWeber' );
-}
 
 if ( ! defined( 'GIVE_AWEBER_PATH' ) ) {
 	define( 'GIVE_AWEBER_PATH', dirname( __FILE__ ) );
@@ -43,7 +36,7 @@ if ( ! defined( 'GIVE_AWEBER_BASENAME' ) ) {
 function give_add_aweber_licensing() {
 
 	if ( class_exists( 'Give_License' ) ) {
-		new Give_License( __FILE__, GIVE_AWEBER_PRODUCT_NAME, GIVE_AWEBER_VERSION, 'Devin Walker' );
+		new Give_License( __FILE__, 'AWeber', GIVE_AWEBER_VERSION, 'Devin Walker' );
 	}
 
 }

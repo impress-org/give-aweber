@@ -794,7 +794,7 @@ class Give_AWeber {
 		ob_start(); ?>
 		<div class="give-aweber-lists">
 			<label class=""
-			       for="<?php echo "{$field->args['id']}_day"; ?>"><?php _e( '', 'give-email-reports' ); ?></label>
+			       for="<?php echo "{$field->args['id']}_day"; ?>"><?php _e( '', 'give-aweber' ); ?></label>
 
 			<select class="cmb2_select give-aweber-list-select" name="<?php echo "{$field->args['id']}"; ?>"
 			        id="<?php echo "{$field->args['id']}"; ?>">
@@ -854,18 +854,13 @@ class Give_AWeber {
 		if ( empty( $_POST['field_type'] ) || empty($_POST['post_id']) ) {
 			wp_send_json_error();
 		}
-
-
 		//Delete transient.
 		delete_transient( 'give_aweber_lists' );
 
 		if ( $_POST['field_type'] == 'select' ) {
 			$lists = $this->get_list_options( $this->get_lists(), give_get_option( 'give_aweber_list' ) );
 		} else {
-
-
 			$lists = $this->get_list_options( $this->get_lists(), get_post_meta( $_POST['post_id'], '_give_aweber', true ), 'checkboxes' );
-
 		}
 
 		$return = array(
