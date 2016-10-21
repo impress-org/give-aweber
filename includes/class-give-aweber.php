@@ -40,7 +40,7 @@ class Give_AWeber {
 	public function __construct() {
 
 		$this->id           = 'aweber';
-		$this->label        = 'Aweber';
+		$this->label        = 'AWeber';
 		$this->give_options = give_get_settings();
 
 		add_action( 'init', array( $this, 'textdomain' ) );
@@ -422,7 +422,7 @@ class Give_AWeber {
 			<?php //Field: subscription lists. ?>
 			<div class="give-<?php echo $this->id; ?>-list-container">
 				<label for="give_<?php echo $this->id; ?>_lists"
-				       style="font-weight:bold;"><?php _e( 'Aweber Opt-in', 'give-aweber' ); ?></label>
+				       style="font-weight:bold;"><?php _e( 'AWeber Opt-in', 'give-aweber' ); ?></label>
 
 				<span class="cmb2-metabox-description give-description"
 				      style="margin: 0 0 10px;"><?php _e( 'Customize the lists and/or groups you wish donors to subscribe to.', 'give-aweber' ); ?></span>
