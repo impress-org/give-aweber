@@ -61,6 +61,25 @@ class Give_AWeber {
 		add_action( 'init', array( $this, 'init' ) );
 
 
+		add_action( 'cmb2_render_give_aweber_list_select', array(
+			$this,
+			'give_aweber_list_select',
+		), 10, 5 );
+
+		add_action( 'wp_ajax_give_reset_aweber_lists', array( $this, 'give_reset_aweber_lists' ) );
+
+	}
+
+	/**
+	 * Sets up the checkout label
+	 */
+	public function init() {
+		if ( ! empty( $this->give_options['give_aweber_label'] ) ) {
+			$this->checkbox_label = trim( $this->give_options['give_aweber_label'] );
+		} else {
+			$this->checkbox_label = __( 'Signup for the newsletter', 'give-aweber' );
+		}
+
 	}
 
 	/**
@@ -80,19 +99,32 @@ class Give_AWeber {
 		global $post_type;
 
 		//Directories of assets.
-		$js_dir  = GIVE_AWEBER_URL . 'assets/js/admin/';
-		$css_dir = GIVE_AWEBER_URL . 'assets/css/admin/';
+		$js_dir  = GIVE_AWEBER_URL . 'assets/js/';
+		$css_dir = GIVE_AWEBER_URL . 'assets/css/';
+
+		wp_register_script( 'give_' . $this->id . '_admin_ajax_js', $js_dir . 'admin-ajax.js', array( 'jquery' ) );
 
 		//Forms CPT Script.
 		if ( $post_type === 'give_forms' ) {
 
 			//CSS.
-			wp_register_style( 'give-' . $this->id . '-admin-css', $css_dir . 'admin-forms.css', GIVE_AWEBER_VERSION );
-			wp_enqueue_style( 'give-' . $this->id . '-admin-css' );
+			wp_register_style( 'give_' . $this->id . '_admin_css', $css_dir . 'admin-forms.css', GIVE_AWEBER_VERSION );
+			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
+
+
+			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
+
 
 			//JS.
-			wp_register_script( 'give-' . $this->id . '-admin-forms-scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_AWEBER_VERSION, false );
-			wp_enqueue_script( 'give-' . $this->id . '-admin-forms-scripts' );
+			wp_register_script( 'give_' . $this->id . '_admin_forms_scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_AWEBER_VERSION, false );
+			wp_enqueue_script( 'give_' . $this->id . '_admin_forms_scripts' );
+		}
+
+		//Admin settings.
+		if ( $hook == 'give_forms_page_give-settings' ) {
+
+			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
+
 		}
 
 
@@ -422,25 +454,22 @@ class Give_AWeber {
 			<?php //Field: subscription lists. ?>
 			<div class="give-<?php echo $this->id; ?>-list-container">
 				<label for="give_<?php echo $this->id; ?>_lists"
-				       style="font-weight:bold;"><?php _e( 'AWeber Lists', 'give-aweber' ); ?></label>
+				       style="font-weight:bold; float:left;"><?php _e( 'AWeber Lists', 'give-aweber' ); ?></label>
+
+
+				<button class="give-reset-aweber-button button button-small" style="float:left; margin: -2px 0 0 15px;"
+				        data-action="give_reset_aweber_lists"
+				        data-field_type="checkbox"><?php echo esc_html__( 'Refresh Lists', 'give-aweber' ); ?></button>
+				<span class="give-spinner spinner" style="float:left;margin: 0 0 0 10px;"></span>
 
 				<span class="cmb2-metabox-description give-description"
-				      style="margin: 0 0 10px;"><?php _e( 'Customize the lists and/or groups you wish donors to subscribe to.', 'give-aweber' ); ?></span>
-
-				<?php $checked = (array) get_post_meta( $post->ID, '_give_' . esc_attr( $this->id ), true );
-				?>
+				      style="margin: 10px 0; clear: both;"><?php _e( 'Customize the lists and/or groups you wish donors to subscribe to.', 'give-aweber' ); ?></span>
 
 				<div class="give-<?php echo $this->id; ?>-list-wrap">
 
-					<?php foreach ( $this->get_lists() as $list_id => $list_name ) : ?>
-
-						<label class="list">
-							<input type="checkbox" name="_give_<?php echo esc_attr( $this->id ); ?>[]"
-							       value="<?php echo esc_attr( $list_id ); ?>" <?php echo checked( true, in_array( $list_id, $checked ), false ); ?>>
-							<span><?php echo $list_name; ?></span>
-						</label>
-
-					<?php endforeach; ?>
+					<?php
+					$value = (array) get_post_meta( $post->ID, '_give_' . $this->id, true );
+					echo $this->get_list_options( $this->get_lists(), $value, 'checkbox' ); ?>
 
 				</div><!-- give-aweber-list-wrap -->
 			</div> <!-- give-aweber-list-container -->
@@ -501,7 +530,7 @@ class Give_AWeber {
 
 		// Sanitize the user input.
 		$give_custom_label      = isset( $_POST[ '_give_' . $this->id . '_custom_label' ] ) ? sanitize_text_field( $_POST[ '_give_' . $this->id . '_custom_label' ] ) : '';
-		$give_custom_lists      = isset( $_POST[ '_give_' . $this->id . '' ] ) ? $_POST[ '_give_' . $this->id . '' ] : $this->give_options[ 'give_' . $this->id . '_list' ];
+		$give_custom_lists      = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id ] : $this->give_options[ 'give_' . $this->id . '_list' ];
 		$give_override_option   = isset( $_POST[ '_give_' . $this->id . '_override_option' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_override_option' ] ) : '';
 		$give_subscribe_checked = isset( $_POST[ '_give_' . $this->id . '_checked_default' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_checked_default' ] ) : '';
 
@@ -513,19 +542,6 @@ class Give_AWeber {
 		update_post_meta( $post_id, '_give_' . $this->id . '_checked_default', $give_subscribe_checked );
 
 		return true;
-
-	}
-
-
-	/**
-	 * Sets up the checkout label
-	 */
-	public function init() {
-		if ( ! empty( $this->give_options['give_aweber_label'] ) ) {
-			$this->checkbox_label = trim( $this->give_options['give_aweber_label'] );
-		} else {
-			$this->checkbox_label = __( 'Signup for the newsletter', 'give-aweber' );
-		}
 
 	}
 
@@ -604,11 +620,10 @@ class Give_AWeber {
 				)
 			),
 			array(
-				'id'      => 'give_aweber_list',
-				'name'    => __( 'Choose a list', 'give-aweber' ),
-				'desc'    => __( 'Select the list you wish to subscribe donors. If you don\'t see your lists available you may need to refresh the page.', 'give-aweber' ),
-				'type'    => 'select',
-				'options' => $this->get_lists()
+				'id'   => 'give_aweber_list',
+				'name' => __( 'Choose a list', 'give-aweber' ),
+				'desc' => __( 'Select the list you wish to subscribe donors. If you don\'t see your lists available you may need to refresh the page.', 'give-aweber' ),
+				'type' => 'give_aweber_list_select',
 			),
 
 			array(
@@ -761,6 +776,103 @@ class Give_AWeber {
 
 		update_option( 'give_aweber_response', $msg );
 
+	}
+
+	/**
+	 * Give add AWeber list select with refresh button.
+	 *
+	 * @param $field
+	 * @param $value
+	 * @param $object_id
+	 * @param $object_type
+	 * @param $field_type CMB2_Types
+	 */
+	public function give_aweber_list_select( $field, $value, $object_id, $object_type, $field_type ) {
+
+		$lists = $this->get_lists();
+
+		ob_start(); ?>
+		<div class="give-aweber-lists">
+			<label class=""
+			       for="<?php echo "{$field->args['id']}_day"; ?>"><?php _e( '', 'give-email-reports' ); ?></label>
+
+			<select class="cmb2_select give-aweber-list-select" name="<?php echo "{$field->args['id']}"; ?>"
+			        id="<?php echo "{$field->args['id']}"; ?>">
+				<?php echo $this->get_list_options( $lists, $value ); ?>
+			</select>
+
+			<button class="give-reset-aweber-button button-secondary" style="margin:3px 0 0 2px !important;"
+			        data-action="give_reset_aweber_lists"
+			        data-field_type="select"><?php echo esc_html__( 'Refresh Lists', 'give-aweber' ); ?></button>
+			<span class="give-spinner spinner"></span>
+
+			<p class="cmb2-metabox-description"><?php echo "{$field->args['desc']}"; ?></p>
+
+		</div>
+
+		<?php echo ob_get_clean();
+	}
+
+	/**
+	 * Get the list options in an appropriate field format. This is used to output on page load and also refresh via AJAX.
+	 *
+	 * @param $lists
+	 * @param string $value
+	 * @param string $field_type
+	 *
+	 * @return string
+	 */
+	public function get_list_options( $lists, $value = '', $field_type = 'select' ) {
+
+		$options = '';
+
+		if ( $field_type == 'select' ) {
+			//Select options
+			foreach ( $lists as $list_id => $list ) {
+				$options .= '<option value="' . $list_id . '"' . selected( $value, $list_id, false ) . '>' . $list . '</option>';
+			}
+
+		} else {
+
+			//Checkboxes.
+			foreach ( $this->get_lists() as $list_id => $list_name ) {
+
+				$options .= '<label class="list"><input type="checkbox" name="_give_' . esc_attr( $this->id ) . '[]"  value="' . esc_attr( $list_id ) . '" ' . checked( true, in_array( $list_id, $value ), false ) . '> <span>' . $list_name . '</span></label>';
+
+			}
+		}
+
+		return $options;
+
+	}
+
+	/**
+	 * AJAX reset Aweber lists.
+	 */
+	public function give_reset_aweber_lists() {
+
+		if ( empty( $_POST['field_type'] ) || empty($_POST['post_id']) ) {
+			wp_send_json_error();
+		}
+
+
+		//Delete transient.
+		delete_transient( 'give_aweber_lists' );
+
+		if ( $_POST['field_type'] == 'select' ) {
+			$lists = $this->get_list_options( $this->get_lists(), give_get_option( 'give_aweber_list' ) );
+		} else {
+
+
+			$lists = $this->get_list_options( $this->get_lists(), get_post_meta( $_POST['post_id'], '_give_aweber', true ), 'checkboxes' );
+
+		}
+
+		$return = array(
+			'lists' => $lists,
+		);
+
+		wp_send_json_success( $return );
 	}
 
 }
