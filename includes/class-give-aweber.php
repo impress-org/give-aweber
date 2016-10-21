@@ -238,7 +238,6 @@ class Give_AWeber {
 		//Add meta to the donation post that this donation opted-in to.
 		add_post_meta( $payment_id, '_give_' . $this->id . '_donation_optin_status', $form_lists );
 
-
 		//Subscribe if array.
 		if ( is_array( $form_lists ) ) {
 			$lists = array_unique( $form_lists );
@@ -492,7 +491,7 @@ class Give_AWeber {
 
 		$this->give_options = give_get_settings();
 
-		/*
+		/**
 		 * We need to verify this came from our screen and with proper authorization,
 		 * because the save_post action can be triggered at other times.
 		 */
