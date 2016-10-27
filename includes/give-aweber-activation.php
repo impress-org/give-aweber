@@ -1,6 +1,6 @@
 <?php
 /**
- * Give Manual Donations Activation
+ * Give AWeber Activation
  *
  * @package     Give
  * @copyright   Copyright (c) 2016, WordImpress
