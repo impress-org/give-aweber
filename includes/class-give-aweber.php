@@ -256,7 +256,7 @@ class Give_AWeber {
 	 * Subscribe an email to a list.
 	 *
 	 * @param array $user_info
-	 * @param bool $list_id
+	 * @param bool  $list_id
 	 *
 	 * @return bool
 	 */
@@ -815,7 +815,7 @@ class Give_AWeber {
 	/**
 	 * Get the list options in an appropriate field format. This is used to output on page load and also refresh via AJAX.
 	 *
-	 * @param $lists
+	 * @param        $lists
 	 * @param string $value
 	 * @param string $field_type
 	 *
@@ -850,16 +850,15 @@ class Give_AWeber {
 	 */
 	public function give_reset_aweber_lists() {
 
-		if ( empty( $_POST['field_type'] ) || empty($_POST['post_id']) ) {
-			wp_send_json_error();
-		}
 		//Delete transient.
 		delete_transient( 'give_aweber_lists' );
 
-		if ( $_POST['field_type'] == 'select' ) {
+		if ( isset( $_POST['field_type'] ) && $_POST['field_type'] == 'select' ) {
 			$lists = $this->get_list_options( $this->get_lists(), give_get_option( 'give_aweber_list' ) );
-		} else {
+		} elseif ( isset( $_POST['post_id'] ) ) {
 			$lists = $this->get_list_options( $this->get_lists(), get_post_meta( $_POST['post_id'], '_give_aweber', true ), 'checkboxes' );
+		} else {
+			wp_send_json_error();
 		}
 
 		$return = array(
