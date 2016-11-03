@@ -28,131 +28,131 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: includes/class-give-aweber.php:80, includes/class-give-aweber.php:364
+#: includes/class-give-aweber.php:80, includes/class-give-aweber.php:363
 msgid "Signup for the newsletter"
 msgstr ""
 
-#: includes/class-give-aweber.php:178, includes/class-give-aweber.php:647
+#: includes/class-give-aweber.php:178, includes/class-give-aweber.php:646
 msgid "Subscribe to our newsletter"
 msgstr ""
 
-#: includes/class-give-aweber.php:332
+#: includes/class-give-aweber.php:331
 msgid "Opted-in"
 msgstr ""
 
-#: includes/class-give-aweber.php:376
+#: includes/class-give-aweber.php:375
 msgid "AWeber Options"
 msgstr ""
 
-#: includes/class-give-aweber.php:378
+#: includes/class-give-aweber.php:377
 msgid "Customize the options for this form or use the default global settings."
 msgstr ""
 
-#: includes/class-give-aweber.php:386, includes/class-give-aweber.php:433
+#: includes/class-give-aweber.php:385, includes/class-give-aweber.php:432
 msgid "Use Default"
 msgstr ""
 
-#: includes/class-give-aweber.php:394
+#: includes/class-give-aweber.php:393
 msgid "Customize"
 msgstr ""
 
-#: includes/class-give-aweber.php:401, includes/class-give-aweber.php:619
+#: includes/class-give-aweber.php:400, includes/class-give-aweber.php:618
 msgid "Disabled"
 msgstr ""
 
-#: includes/class-give-aweber.php:409
+#: includes/class-give-aweber.php:408
 msgid "Custom Label"
 msgstr ""
 
-#: includes/class-give-aweber.php:411
+#: includes/class-give-aweber.php:410
 msgid "Customize the label for the %1$s opt-in checkbox"
 msgstr ""
 
-#: includes/class-give-aweber.php:422, includes/class-give-aweber.php:631
+#: includes/class-give-aweber.php:421, includes/class-give-aweber.php:630
 msgid "Opt-in Default"
 msgstr ""
 
-#: includes/class-give-aweber.php:424
+#: includes/class-give-aweber.php:423
 msgid "Customize the newsletter opt-in option for this form."
 msgstr ""
 
-#: includes/class-give-aweber.php:441, includes/class-give-aweber.php:634
+#: includes/class-give-aweber.php:440, includes/class-give-aweber.php:633
 msgid "Checked"
 msgstr ""
 
-#: includes/class-give-aweber.php:448, includes/class-give-aweber.php:635
+#: includes/class-give-aweber.php:447, includes/class-give-aweber.php:634
 msgid "Unchecked"
 msgstr ""
 
-#: includes/class-give-aweber.php:457
+#: includes/class-give-aweber.php:456
 msgid "AWeber Lists"
 msgstr ""
 
-#: includes/class-give-aweber.php:462, includes/class-give-aweber.php:806
+#: includes/class-give-aweber.php:461, includes/class-give-aweber.php:805
 msgid "Refresh Lists"
 msgstr ""
 
-#: includes/class-give-aweber.php:466
+#: includes/class-give-aweber.php:465
 msgid "Customize the lists and/or groups you wish donors to subscribe to."
 msgstr ""
 
-#: includes/class-give-aweber.php:599
+#: includes/class-give-aweber.php:598
 msgid "AWeber Settings"
 msgstr ""
 
-#: includes/class-give-aweber.php:606
+#: includes/class-give-aweber.php:605
 msgid "AWeber Authorization Code"
 msgstr ""
 
-#: includes/class-give-aweber.php:607
+#: includes/class-give-aweber.php:606
 msgid "Retrieve your <a href=\"%s\" target=\"_blank\" title=\"Will open new window\">AWeber Authorization Code</a> and paste it above then save to enable the AWeber integration."
 msgstr ""
 
-#: includes/class-give-aweber.php:613
+#: includes/class-give-aweber.php:612
 msgid "Enable Globally"
 msgstr ""
 
-#: includes/class-give-aweber.php:614
+#: includes/class-give-aweber.php:613
 msgid "Allow donors to sign up for the list selected below on all donation forms? Note: the list(s) can be customized per form."
 msgstr ""
 
-#: includes/class-give-aweber.php:618
+#: includes/class-give-aweber.php:617
 msgid "Enabled"
 msgstr ""
 
-#: includes/class-give-aweber.php:624
+#: includes/class-give-aweber.php:623
 msgid "Choose a list"
 msgstr ""
 
-#: includes/class-give-aweber.php:625
+#: includes/class-give-aweber.php:624
 msgid "Select the list you wish to subscribe donors. If you don't see your lists available you may need to refresh the page."
 msgstr ""
 
-#: includes/class-give-aweber.php:632
+#: includes/class-give-aweber.php:631
 msgid "Would you like the newsletter opt-in checkbox checked by default? This option can be customized per form."
 msgstr ""
 
-#: includes/class-give-aweber.php:642
+#: includes/class-give-aweber.php:641
 msgid "Default Label"
 msgstr ""
 
-#: includes/class-give-aweber.php:643
+#: includes/class-give-aweber.php:642
 msgid "This is the text shown next to the signup option. This can also be customized per form."
 msgstr ""
 
-#: includes/class-give-aweber.php:748
+#: includes/class-give-aweber.php:747
 msgid "Unable to connect to your AWeber Account:"
 msgstr ""
 
-#: includes/class-give-aweber.php:752
+#: includes/class-give-aweber.php:751
 msgid "Authorization code entered was:"
 msgstr ""
 
-#: includes/class-give-aweber.php:755
+#: includes/class-give-aweber.php:754
 msgid "Please make sure you entered the complete authorization code and try again."
 msgstr ""
 
-#: includes/class-give-aweber.php:797
+#: includes/class-give-aweber.php:796
 msgid ""
 msgstr ""
 
