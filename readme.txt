@@ -3,7 +3,7 @@ Contributors: wordimpress
 Tags: give, aweber, newsletter, email marketing
 Requires at least: 4.0
 Tested up to: 4.6.1
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
 
@@ -34,6 +34,9 @@ The manual installation method involves downloading our donation plugin and uplo
 Automatic updates should work like a charm; as always though, ensure you backup your site just in case.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fix: The refresh email lists button hangs when clicked - https://github.com/WordImpress/Give-AWeber/issues/2
 
 = 1.0 =
 * Initial plugin release. Yippee!
