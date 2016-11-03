@@ -37,9 +37,7 @@ jQuery(document).ready(function ($) {
 				spinner.addClass('is-active');
 			},
 			success: function (res) {
-
 				if (true == res.success) {
-					console.log(res);
 					//Replace select options.
 					if (field_type == 'select') {
 						$('.give-aweber-list-select').empty().append(res.data.lists);
