@@ -49,6 +49,7 @@ add_action( 'plugins_loaded', 'give_add_aweber_licensing' );
  */
 function give_aweber_includes() {
 
+	include( GIVE_AWEBER_PATH . '/includes/give-aweber-activation.php' );
 	include( GIVE_AWEBER_PATH . '/includes/class-give-aweber.php' );
 
 	new Give_Aweber( 'aweber', 'AWeber' );
@@ -56,71 +57,3 @@ function give_aweber_includes() {
 }
 
 add_action( 'plugins_loaded', 'give_aweber_includes' );
-
-
-/**
- * Plugins row action links.
- *
- * @since 1.0
- *
- * @param array $actions An array of plugin action links.
- *
- * @return array An array of updated action links.
- */
-function give_aweber_plugin_action_links( $actions ) {
-	$new_actions = array(
-		'settings' => sprintf(
-			'<a href="%1$s">%2$s</a>',
-			admin_url( 'edit.php?post_type=give_forms&page=give-settings&tab=addons' ),
-			esc_html__( 'Settings', 'give-aweber' )
-		),
-	);
-
-	return array_merge( $new_actions, $actions );
-}
-
-add_filter( 'plugin_action_links_' . GIVE_AWEBER_BASENAME, 'give_aweber_plugin_action_links' );
-
-
-/**
- * Plugin row meta links
- *
- * @since 1.0
- *
- * @param array $plugin_meta An array of the plugin's metadata.
- * @param string $plugin_file Path to the plugin file, relative to the plugins directory.
- *
- * @return array
- */
-function give_aweber_plugin_row_meta( $plugin_meta, $plugin_file ) {
-	if ( $plugin_file != GIVE_AWEBER_BASENAME ) {
-		return $plugin_meta;
-	}
-
-	$new_meta_links = array(
-		sprintf(
-			'<a href="%1$s" target="_blank">%2$s</a>',
-			esc_url( add_query_arg( array(
-					'utm_source'   => 'plugins-page',
-					'utm_medium'   => 'plugin-row',
-					'utm_campaign' => 'admin',
-				), 'https://givewp.com/documentation/add-ons/aweber/' )
-			),
-			esc_html__( 'Documentation', 'give-aweber' )
-		),
-		sprintf(
-			'<a href="%1$s" target="_blank">%2$s</a>',
-			esc_url( add_query_arg( array(
-					'utm_source'   => 'plugins-page',
-					'utm_medium'   => 'plugin-row',
-					'utm_campaign' => 'admin',
-				), 'https://givewp.com/addons/' )
-			),
-			esc_html__( 'Add-ons', 'give-aweber' )
-		),
-	);
-
-	return array_merge( $plugin_meta, $new_meta_links );
-}
-
-add_filter( 'plugin_row_meta', 'give_aweber_plugin_row_meta', 10, 2 );
