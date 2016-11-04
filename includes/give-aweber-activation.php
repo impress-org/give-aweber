@@ -68,7 +68,7 @@ function give_aweber_activation_banner() {
 		'file'              => __FILE__,
 		'name'              => esc_html__( 'AWeber', 'give-aweber' ),
 		'version'           => GIVE_AWEBER_VERSION,
-		'settings_url'      => admin_url( 'edit.php?post_type=give_forms&page=give-payment-history' ),
+		'settings_url'      => admin_url( 'edit.php?post_type=give_forms&page=give-settings&tab=addons' ),
 		'documentation_url' => 'https://givewp.com/documentation/add-ons/aweber/',
 		'support_url'       => 'https://givewp.com/support/',
 		'testing'           => false
