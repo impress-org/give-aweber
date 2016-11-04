@@ -36,7 +36,7 @@ if ( ! defined( 'GIVE_AWEBER_BASENAME' ) ) {
 function give_add_aweber_licensing() {
 
 	if ( class_exists( 'Give_License' ) ) {
-		new Give_License( __FILE__, 'AWeber', GIVE_AWEBER_VERSION, 'Devin Walker' );
+		new Give_License( __FILE__, 'AWeber', GIVE_AWEBER_VERSION, 'WordImpress' );
 	}
 
 }
