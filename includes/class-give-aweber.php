@@ -666,8 +666,11 @@ class Give_AWeber {
 		//Is disabled on the form?
 		if ( $override_option == 'disabled' ) {
 			return false;
-		} elseif ( $global_option == 'disabled' && $override_option == 'default' ) {
-			//Global option disabled?
+		} elseif ( $global_option == 'disabled' && $override_option == 'default'
+		           || $global_option == 'disabled' && empty( $override_option )
+		) {
+			//Global option = disabled and override option = default;
+			// OR global option = disable and override option not present.
 			return false;
 		} else {
 			//Default to true.
