@@ -620,7 +620,7 @@ class Give_AWeber {
 			),
 			array(
 				'id'   => 'give_aweber_list',
-				'name' => __( 'Choose a list', 'give-aweber' ),
+				'name' => __( 'Choose a List', 'give-aweber' ),
 				'desc' => __( 'Select the list you wish to subscribe donors.', 'give-aweber' ),
 				'type' => 'give_aweber_list_select',
 			),
