@@ -48,7 +48,7 @@ class Give_AWeber {
 		add_action( 'save_post', array( $this, 'save_metabox' ) );
 
 		add_filter( 'give_settings_addons', array( $this, 'settings' ) );
-		add_action( 'give_purchase_form_before_submit', array( $this, 'form_fields' ), 100, 1 );
+		add_action( 'give_donation_form_before_submit', array( $this, 'form_fields' ), 100, 1 );
 		add_action( 'give_insert_payment', array( $this, 'completed_donation_signup' ), 10, 2 );
 
 		//Scripts.
