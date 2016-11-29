@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Give - AWeber
- * Plugin URL: https://givewp.com/addons/aweber/
+ * Plugin URI: https://givewp.com/addons/aweber/
  * Description: Easily integrate AWeber opt-ins within your Give donation forms.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: WordImpress
  * Author URI: https://wordimpress.com
  * Text Domain: give-aweber
@@ -11,7 +11,11 @@
 
 //Define constants.
 if ( ! defined( 'GIVE_AWEBER_VERSION' ) ) {
-	define( 'GIVE_AWEBER_VERSION', '1.0.1' );
+	define( 'GIVE_AWEBER_VERSION', '1.0.2' );
+}
+
+if ( ! defined( 'GIVE_AWEBER_MIN_GIVE_VERSION' ) ) {
+	define( 'GIVE_AWEBER_MIN_GIVE_VERSION', '1.7' );
 }
 
 if ( ! defined( 'GIVE_AWEBER_PATH' ) ) {
@@ -50,6 +54,11 @@ add_action( 'plugins_loaded', 'give_add_aweber_licensing' );
 function give_aweber_includes() {
 
 	include( GIVE_AWEBER_PATH . '/includes/give-aweber-activation.php' );
+
+	if ( ! class_exists( 'Give' ) ) {
+		return false;
+	}
+
 	include( GIVE_AWEBER_PATH . '/includes/class-give-aweber.php' );
 
 	new Give_Aweber( 'aweber', 'AWeber' );

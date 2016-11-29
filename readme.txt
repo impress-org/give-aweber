@@ -1,9 +1,9 @@
 === Give - AWeber ===
 Contributors: wordimpress
 Tags: give, aweber, newsletter, email marketing
-Requires at least: 4.0
-Tested up to: 4.6.1
-Stable tag: 1.0.1
+Requires at least: 4.2
+Tested up to: 4.7
+Stable tag: 1.0.2
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
 
@@ -17,7 +17,7 @@ This plugin requires the Give plugin activated to function properly. When activa
 
 = Minimum Requirements =
 
-* WordPress 4.0 or greater
+* WordPress 4.2 or greater
 * PHP version 5.3 or greater
 * MySQL version 5.0 or greater
 
@@ -34,6 +34,10 @@ The manual installation method involves downloading our donation plugin and uplo
 Automatic updates should work like a charm; as always though, ensure you backup your site just in case.
 
 == Changelog ==
+
+= 1.0.2 =
+* New: The plugin now checks to see if Give is active and up to the minimum version required to run the plugin - https://github.com/WordImpress/Give-Constant-Contact/issues/5
+* Tweak: Plugin updated to use new hooks names found in Give 1.7
 
 = 1.0.1 =
 * Fix: The refresh email lists button hangs when clicked - https://github.com/WordImpress/Give-AWeber/issues/2
