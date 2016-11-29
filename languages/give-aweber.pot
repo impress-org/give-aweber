@@ -16,18 +16,6 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: give-aweber.php:75
-msgid "Settings"
-msgstr ""
-
-#: give-aweber.php:109
-msgid "Documentation"
-msgstr ""
-
-#: give-aweber.php:119
-msgid "Add-ons"
-msgstr ""
-
 #: includes/class-give-aweber.php:80, includes/class-give-aweber.php:363
 msgid "Signup for the newsletter"
 msgstr ""
@@ -88,7 +76,7 @@ msgstr ""
 msgid "AWeber Lists"
 msgstr ""
 
-#: includes/class-give-aweber.php:461, includes/class-give-aweber.php:805
+#: includes/class-give-aweber.php:461, includes/class-give-aweber.php:808
 msgid "Refresh Lists"
 msgstr ""
 
@@ -121,11 +109,11 @@ msgid "Enabled"
 msgstr ""
 
 #: includes/class-give-aweber.php:623
-msgid "Choose a list"
+msgid "Choose a List"
 msgstr ""
 
 #: includes/class-give-aweber.php:624
-msgid "Select the list you wish to subscribe donors. If you don't see your lists available you may need to refresh the page."
+msgid "Select the list you wish to subscribe donors."
 msgstr ""
 
 #: includes/class-give-aweber.php:631
@@ -140,30 +128,42 @@ msgstr ""
 msgid "This is the text shown next to the signup option. This can also be customized per form."
 msgstr ""
 
-#: includes/class-give-aweber.php:747
+#: includes/class-give-aweber.php:750
 msgid "Unable to connect to your AWeber Account:"
 msgstr ""
 
-#: includes/class-give-aweber.php:751
+#: includes/class-give-aweber.php:754
 msgid "Authorization code entered was:"
 msgstr ""
 
-#: includes/class-give-aweber.php:754
+#: includes/class-give-aweber.php:757
 msgid "Please make sure you entered the complete authorization code and try again."
 msgstr ""
 
-#: includes/class-give-aweber.php:796
+#: includes/class-give-aweber.php:799
 msgid ""
 msgstr ""
 
-#: includes/give-aweber-activation.php:69
+#: includes/give-aweber-activation.php:70
 msgid "AWeber"
 msgstr ""
 
-#: includes/give-aweber-activation.php:91
-msgid "<strong>Activation Error:</strong> We noticed Give is not active. Please activate Give in order to use AWeber."
+#: includes/give-aweber-activation.php:94
+msgid "<strong>Activation Error:</strong> You must have the <a href=\"https://givewp.com/\" target=\"_blank\">Give</a> plugin installed and activated for the AWeber add-on to activate."
 msgstr ""
 
-#: includes/give-aweber-activation.php:100
-msgid "<strong>Activation Error:</strong> We noticed Give is not up to date. Please update Give in order to use AWeber."
+#: includes/give-aweber-activation.php:103
+msgid "<strong>Activation Error:</strong> You must have <a href=\"%s\" target=\"_blank\">Give</a> version %s+ for the AWeber add-on to activate."
+msgstr ""
+
+#: includes/give-aweber-activation.php:121
+msgid "Settings"
+msgstr ""
+
+#: includes/give-aweber-activation.php:155
+msgid "Documentation"
+msgstr ""
+
+#: includes/give-aweber-activation.php:165
+msgid "Add-ons"
 msgstr ""

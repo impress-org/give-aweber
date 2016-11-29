@@ -100,7 +100,7 @@ function give_aweber_activation_notice() {
  * @since 1.0.2
  */
 function give_aweber_min_version_notice() {
-	echo '<div class="error"><p>' . sprintf( __( '<strong>Activation Error:</strong> You must have <a href="%s" target="_blank">Give</a> version %s+ for the AWeber add-on to activate.', 'give-convertkit' ), 'https://givewp.com', GIVE_AWEBER_MIN_GIVE_VERSION ) . '</p></div>';
+	echo '<div class="error"><p>' . sprintf( __( '<strong>Activation Error:</strong> You must have <a href="%s" target="_blank">Give</a> version %s+ for the AWeber add-on to activate.', 'give-aweber' ), 'https://givewp.com', GIVE_AWEBER_MIN_GIVE_VERSION ) . '</p></div>';
 }
 
 
