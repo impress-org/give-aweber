@@ -481,7 +481,7 @@ class Give_AWeber {
 	 *
 	 * @param int $post_id The ID of the post being saved.
 	 *
-	 * @return void|string
+	 * @return bool|string
 	 */
 	public function save_metabox( $post_id ) {
 
