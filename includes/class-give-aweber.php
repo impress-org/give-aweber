@@ -2,10 +2,6 @@
 
 /**
  * Class Give_AWeber
- *
- * Give Aweber class, extension of the base newsletter classs
- *
- * @since       1.0
  */
 class Give_AWeber {
 
@@ -107,7 +103,7 @@ class Give_AWeber {
 		//Forms CPT Script.
 		if ( $post_type === 'give_forms' ) {
 
-			//CSS.
+			// CSS.
 			wp_register_style( 'give_' . $this->id . '_admin_css', $css_dir . 'admin-forms.css', GIVE_AWEBER_VERSION );
 			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
 
@@ -115,7 +111,7 @@ class Give_AWeber {
 			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
 
 
-			//JS.
+			// JS.
 			wp_register_script( 'give_' . $this->id . '_admin_forms_scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_AWEBER_VERSION, false );
 			wp_enqueue_script( 'give_' . $this->id . '_admin_forms_scripts' );
 		}
@@ -596,7 +592,6 @@ class Give_AWeber {
 		$give_aweber_settings = array(
 			array(
 				'name' => __( 'AWeber Settings', 'give-aweber' ),
-				'desc' => '<hr>',
 				'id'   => 'give_title_' . $this->id,
 				'type' => 'give_title'
 			),
@@ -785,25 +780,22 @@ class Give_AWeber {
 	 *
 	 * @param $field
 	 * @param $value
-	 * @param $object_id
-	 * @param $object_type
-	 * @param $field_type CMB2_Types
 	 */
-	public function give_aweber_list_select( $field, $value, $object_id, $object_type, $field_type ) {
+	public function give_aweber_list_select( $field, $value ) {
 
 		$lists = $this->get_lists();
 
 		ob_start(); ?>
 		<div class="give-aweber-lists">
 			<label class=""
-			       for="<?php echo "{$field->args['id']}_day"; ?>"><?php _e( '', 'give-aweber' ); ?></label>
+			       for="<?php echo "{$field->args['id']}"; ?>"><?php _e( '', 'give-aweber' ); ?></label>
 
 			<select class="cmb2_select give-aweber-list-select" name="<?php echo "{$field->args['id']}"; ?>"
 			        id="<?php echo "{$field->args['id']}"; ?>">
 				<?php echo $this->get_list_options( $lists, $value ); ?>
 			</select>
 
-			<button class="give-reset-aweber-button button-secondary" style="margin:3px 0 0 2px !important;"
+			<button class="give-reset-aweber-button button-secondary" style="margin:1px 0 0 2px !important;"
 			        data-action="give_reset_aweber_lists"
 			        data-field_type="select"><?php echo esc_html__( 'Refresh Lists', 'give-aweber' ); ?></button>
 			<span class="give-spinner spinner"></span>
