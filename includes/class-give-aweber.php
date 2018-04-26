@@ -51,7 +51,7 @@ class Give_AWeber {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ), 100 );
 
 		//Donation metabox.
-		add_filter( 'give_view_order_details_totals_after', array( $this, 'donation_metabox_notification' ), 10, 1 );
+		add_filter( 'give_view_donation_details_totals_after', array( $this, 'donation_metabox_notification' ), 10, 1 );
 
 		//Get it started.
 		add_action( 'init', array( $this, 'init' ) );
