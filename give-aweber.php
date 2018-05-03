@@ -3,7 +3,7 @@
  * Plugin Name: Give - AWeber
  * Plugin URI: https://givewp.com/addons/aweber/
  * Description: Easily integrate AWeber opt-ins within your Give donation forms.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: WordImpress
  * Author URI: https://wordimpress.com
  * Text Domain: give-aweber
@@ -11,27 +11,31 @@
 
 //Define constants.
 if ( ! defined( 'GIVE_AWEBER_VERSION' ) ) {
-	define( 'GIVE_AWEBER_VERSION', '1.0.2' );
+	define( 'GIVE_AWEBER_VERSION', '1.0.3' );
 }
 
 if ( ! defined( 'GIVE_AWEBER_MIN_GIVE_VERSION' ) ) {
-	define( 'GIVE_AWEBER_MIN_GIVE_VERSION', '2.0.1' );
+	define( 'GIVE_AWEBER_MIN_GIVE_VERSION', '2.1.1' );
+}
+
+if ( ! defined( 'GIVE_AWEBER_FILE' ) ) {
+	define( 'GIVE_AWEBER_FILE', __FILE__ );
 }
 
 if ( ! defined( 'GIVE_AWEBER_PATH' ) ) {
-	define( 'GIVE_AWEBER_PATH', dirname( __FILE__ ) );
+	define( 'GIVE_AWEBER_PATH', dirname( GIVE_AWEBER_FILE ) );
 }
 
 if ( ! defined( 'GIVE_AWEBER_URL' ) ) {
-	define( 'GIVE_AWEBER_URL', plugin_dir_url( __FILE__ ) );
+	define( 'GIVE_AWEBER_URL', plugin_dir_url( GIVE_AWEBER_FILE ) );
 }
 
 if ( ! defined( 'GIVE_AWEBER_DIR' ) ) {
-	define( 'GIVE_AWEBER_DIR', plugin_dir_path( __FILE__ ) );
+	define( 'GIVE_AWEBER_DIR', plugin_dir_path( GIVE_AWEBER_FILE ) );
 }
 
 if ( ! defined( 'GIVE_AWEBER_BASENAME' ) ) {
-	define( 'GIVE_AWEBER_BASENAME', plugin_basename( __FILE__ ) );
+	define( 'GIVE_AWEBER_BASENAME', plugin_basename( GIVE_AWEBER_FILE ) );
 }
 
 /**
@@ -40,7 +44,7 @@ if ( ! defined( 'GIVE_AWEBER_BASENAME' ) ) {
 function give_add_aweber_licensing() {
 
 	if ( class_exists( 'Give_License' ) ) {
-		new Give_License( __FILE__, 'AWeber', GIVE_AWEBER_VERSION, 'WordImpress' );
+		new Give_License( GIVE_AWEBER_FILE, 'AWeber', GIVE_AWEBER_VERSION, 'WordImpress' );
 	}
 
 }
