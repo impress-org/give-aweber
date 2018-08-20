@@ -120,6 +120,10 @@ class Give_AWeber {
 	 */
 	public function init() {
 
+		if ( ! $this->get_environment_warning() ) {
+			return;
+		}
+
 		$this->licensing();
 		$this->textdomain();
 
