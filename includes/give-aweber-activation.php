@@ -22,41 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function give_aweber_activation_banner() {
 
-	// Check for if give plugin activate or not.
-	$is_give_active = defined( 'GIVE_PLUGIN_BASENAME' ) ? is_plugin_active( GIVE_PLUGIN_BASENAME ) : false;
-
-	//Check to see if Give is activated, if it isn't deactivate and show a banner.
-	if ( current_user_can( 'activate_plugins' ) && ! $is_give_active ) {
-
-		add_action( 'admin_notices', 'give_aweber_activation_notice' );
-
-		//Don't let this plugin activate
-		deactivate_plugins( GIVE_AWEBER_BASENAME );
-
-		if ( isset( $_GET['activate'] ) ) {
-			unset( $_GET['activate'] );
-		}
-
-		return false;
-
-	}
-
-	//Check minimum Give version.
-	if ( defined( 'GIVE_VERSION' ) && version_compare( GIVE_VERSION, GIVE_AWEBER_MIN_GIVE_VERSION, '<' ) ) {
-
-		add_action( 'admin_notices', 'give_aweber_min_version_notice' );
-
-		//Don't let this plugin activate.
-		deactivate_plugins( GIVE_AWEBER_BASENAME );
-
-		if ( isset( $_GET['activate'] ) ) {
-			unset( $_GET['activate'] );
-		}
-
-		return false;
-
-	}
-
 	// Check for activation banner inclusion.
 	if (
 		! class_exists( 'Give_Addon_Activation_Banner' )
@@ -83,30 +48,9 @@ function give_aweber_activation_banner() {
 
 	}
 
-	return false;
-
 }
 
 add_action( 'admin_init', 'give_aweber_activation_banner' );
-
-/**
- * Notice for No Core Activation
- *
- * @since 1.0.2
- */
-function give_aweber_activation_notice() {
-	echo '<div class="error"><p>' . __( '<strong>Activation Error:</strong> You must have the <a href="https://givewp.com/" target="_blank">Give</a> plugin installed and activated for the AWeber add-on to activate.', 'give-aweber' ) . '</p></div>';
-}
-
-/**
- * Notice for No Core Activation
- *
- * @since 1.0.2
- */
-function give_aweber_min_version_notice() {
-	echo '<div class="error"><p>' . sprintf( __( '<strong>Activation Error:</strong> You must have <a href="%s" target="_blank">Give</a> version %s+ for the AWeber add-on to activate.', 'give-aweber' ), 'https://givewp.com', GIVE_AWEBER_MIN_GIVE_VERSION ) . '</p></div>';
-}
-
 
 /**
  * Plugins row action links.
@@ -137,7 +81,7 @@ add_filter( 'plugin_action_links_' . GIVE_AWEBER_BASENAME, 'give_aweber_plugin_a
  *
  * @since 1.0
  *
- * @param array  $plugin_meta An array of the plugin's metadata.
+ * @param array $plugin_meta An array of the plugin's metadata.
  * @param string $plugin_file Path to the plugin file, relative to the plugins directory.
  *
  * @return array
