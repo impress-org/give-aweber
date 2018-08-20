@@ -985,7 +985,7 @@ class Give_AWeber {
 	}
 
 	/**
-	 * Implement Give Licensing for Give Mollie Add On.
+	 * Implement Give Licensing for Give Aweber Add On.
 	 *
 	 * @since  1.0.4
 	 * @access private
@@ -993,9 +993,9 @@ class Give_AWeber {
 	private function licensing() {
 		if ( class_exists( 'Give_License' ) ) {
 			new Give_License(
-				GIVE_MOLLIE_PLUGIN_FILE,
-				'Mollie Payment Gateway',
-				GIVE_MOLLIE_VERSION,
+				GIVE_AWEBER_FILE,
+				'Aweber Payment Gateway',
+				GIVE_AWEBER_VERSION,
 				'WordImpress'
 			);
 		}
@@ -1024,7 +1024,7 @@ class Give_AWeber {
 
 		if ( empty( $is_give_active ) ) {
 			// Show admin notice.
-			$this->add_admin_notice( 'prompt_give_activate', 'error', sprintf( __( '<strong>Activation Error:</strong> You must have the <a href="%s" target="_blank">Give</a> plugin installed and activated for Give - Mollie to activate.', 'give-mollie' ), 'https://givewp.com' ) );
+			$this->add_admin_notice( 'prompt_give_activate', 'error', sprintf( __( '<strong>Activation Error:</strong> You must have the <a href="%s" target="_blank">Give</a> plugin installed and activated for Give - Aweber to activate.', 'give-aweber' ), 'https://givewp.com' ) );
 			$is_working = false;
 		}
 
@@ -1046,12 +1046,12 @@ class Give_AWeber {
 		// Verify dependency cases.
 		if (
 			defined( 'GIVE_VERSION' )
-			&& version_compare( GIVE_VERSION, GIVE_MOLLIE_MIN_GIVE_VER, '<' )
+			&& version_compare( GIVE_VERSION, GIVE_AWEBER_MIN_GIVE_VERSION, '<' )
 		) {
 
 			/* Min. Give. plugin version. */
 			// Show admin notice.
-			$this->add_admin_notice( 'prompt_give_incompatible', 'error', sprintf( __( '<strong>Activation Error:</strong> You must have the <a href="%s" target="_blank">Give</a> core version %s for the Give - Mollie add-on to activate.', 'give-mollie' ), 'https://givewp.com', GIVE_MOLLIE_MIN_GIVE_VER ) );
+			$this->add_admin_notice( 'prompt_give_incompatible', 'error', sprintf( __( '<strong>Activation Error:</strong> You must have the <a href="%s" target="_blank">Give</a> core version %s for the Give - Aweber add-on to activate.', 'give-aweber' ), 'https://givewp.com', GIVE_AWEBER_MIN_GIVE_VERSION ) );
 
 			$is_working = false;
 		}
