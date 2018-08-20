@@ -47,7 +47,6 @@ function give_aweber_activation_banner() {
 		new Give_Addon_Activation_Banner( $args );
 
 	}
-
 }
 
 add_action( 'admin_init', 'give_aweber_activation_banner' );

@@ -124,6 +124,8 @@ class Give_AWeber {
 			return;
 		}
 
+		include( GIVE_AWEBER_PATH . '/includes/give-aweber-activation.php' );
+
 		$this->licensing();
 		$this->textdomain();
 
