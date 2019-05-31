@@ -132,7 +132,8 @@ class Give_AWeber {
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'save_post', array( $this, 'save_metabox' ) );
 
-		add_filter( 'give_settings_addons', array( $this, 'settings' ) );
+		add_filter( 'give_get_settings_addons', array( $this, 'settings' ) );
+		add_filter( 'give_get_sections_addons', array( $this, 'add_section' ) );
 		add_action( 'give_donation_form_before_submit', array( $this, 'form_fields' ), 100, 1 );
 		add_action( 'give_insert_payment', array( $this, 'completed_donation_signup' ), 10, 2 );
 
@@ -661,6 +662,21 @@ class Give_AWeber {
 		return (array) $this->lists;
 	}
 
+
+	/**
+	 * Register section
+	 *
+	 * @param $sections
+	 *
+	 * @return mixed
+	 * @since 1.0.4
+	 */
+	public function add_section( $sections ) {
+		$sections["{$this->id}-settings"] = __( 'Aweber Settings', 'give-aweber' );
+
+		return $sections;
+	}
+
 	/**
 	 * Registers the plugin's settings.
 	 *
@@ -669,12 +685,15 @@ class Give_AWeber {
 	 * @return array
 	 */
 	public function settings( $settings ) {
+		// Exit.
+		if( "{$this->id}-settings" !== give_get_current_setting_section() ) {
+			return $settings;
+		}
 
-		$give_aweber_settings = array(
+		return array(
 			array(
-				'name' => __( 'AWeber Settings', 'give-aweber' ),
 				'id'   => 'give_title_' . $this->id,
-				'type' => 'give_title'
+				'type' => 'title'
 			),
 			array(
 				'id'   => 'give_aweber_api',
@@ -721,10 +740,12 @@ class Give_AWeber {
 				'attributes' => array(
 					'placeholder' => __( 'Subscribe to our newsletter', 'give-aweber' ),
 				),
-			)
+			),
+			array(
+				'id'   => 'give_title_' . $this->id,
+				'type' => 'sectionend'
+			),
 		);
-
-		return array_merge( $settings, $give_aweber_settings );
 	}
 
 	/**
