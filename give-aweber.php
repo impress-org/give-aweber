@@ -151,10 +151,7 @@ class Give_AWeber {
 		}
 
 
-		add_action( 'cmb2_render_give_aweber_list_select', array(
-			$this,
-			'give_aweber_list_select',
-		), 10, 5 );
+		add_action( 'give_admin_field_aweber_list_select', array( $this, 'aweber_list_select' ), 10, 2 );
 
 		add_action( 'wp_ajax_give_reset_aweber_lists', array( $this, 'give_reset_aweber_lists' ) );
 
@@ -717,7 +714,7 @@ class Give_AWeber {
 				'id'   => 'give_aweber_list',
 				'name' => __( 'Choose a List', 'give-aweber' ),
 				'desc' => __( 'Select the list you wish to subscribe donors.', 'give-aweber' ),
-				'type' => 'give_aweber_list_select',
+				'type' => 'aweber_list_select',
 			),
 
 			array(
@@ -883,30 +880,34 @@ class Give_AWeber {
 	 * @param $field
 	 * @param $value
 	 */
-	public function give_aweber_list_select( $field, $value ) {
+	public function aweber_list_select( $field, $value ) {
 
 		$lists = $this->get_lists();
 
-		ob_start(); ?>
-		<div class="give-aweber-lists">
-			<label class=""
-			       for="<?php echo "{$field->args['id']}"; ?>"><?php _e( '', 'give-aweber' ); ?></label>
+		ob_start(); 
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $field['id'] ); ?>">
+					<?php echo esc_attr( $field['name'] ); ?>
+				</label>
+			</th>
+			<td scope="row" class="">
+				<select class="give-select give-aweber-list-select" name="<?php echo "{$field['id']}"; ?>"
+						id="<?php echo "{$field['id']}"; ?>">
+					<?php echo $this->get_list_options( $lists, $value ); ?>
+				</select>
 
-			<select class="cmb2_select give-aweber-list-select" name="<?php echo "{$field->args['id']}"; ?>"
-			        id="<?php echo "{$field->args['id']}"; ?>">
-				<?php echo $this->get_list_options( $lists, $value ); ?>
-			</select>
+				<button class="give-reset-aweber-button button-secondary" style="margin:1px 0 0 2px !important;"
+						data-action="give_reset_aweber_lists"
+						data-field_type="select"><?php echo esc_html__( 'Refresh Lists', 'give-aweber' ); ?></button>
+				<span class="give-spinner spinner"></span>
 
-			<button class="give-reset-aweber-button button-secondary" style="margin:1px 0 0 2px !important;"
-			        data-action="give_reset_aweber_lists"
-			        data-field_type="select"><?php echo esc_html__( 'Refresh Lists', 'give-aweber' ); ?></button>
-			<span class="give-spinner spinner"></span>
-
-			<p class="cmb2-metabox-description"><?php echo "{$field->args['desc']}"; ?></p>
-
-		</div>
-
-		<?php echo ob_get_clean();
+				<p class="give-field-description"><?php echo "{$field['desc']}"; ?></p>
+			</td>
+		</tr>
+		<?php 
+		echo ob_get_clean();
 	}
 
 	/**
