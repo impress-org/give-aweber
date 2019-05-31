@@ -15,7 +15,7 @@ if ( ! defined( 'GIVE_AWEBER_VERSION' ) ) {
 }
 
 if ( ! defined( 'GIVE_AWEBER_MIN_GIVE_VERSION' ) ) {
-	define( 'GIVE_AWEBER_MIN_GIVE_VERSION', '2.1.1' );
+	define( 'GIVE_AWEBER_MIN_GIVE_VERSION', '2.5.0' );
 }
 
 if ( ! defined( 'GIVE_AWEBER_FILE' ) ) {
