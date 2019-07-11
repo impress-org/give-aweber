@@ -1,5 +1,5 @@
 === Give - AWeber ===
-Contributors: wordimpress
+Contributors: givewp
 Tags: give, aweber, newsletter, email marketing
 Requires at least: 4.5
 Tested up to: 4.9
@@ -40,11 +40,11 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 * Tweak: Updated hooks to be compatibile with Give Core 2.1+ - please update to the latest Give Core version!
 
 = 1.0.2 =
-* New: The plugin now checks to see if Give is active and up to the minimum version required to run the plugin - https://github.com/WordImpress/Give-Constant-Contact/issues/5
+* New: The plugin now checks to see if Give is active and up to the minimum version required to run the plugin.
 * Tweak: Plugin updated to use new hooks names found in Give 1.7
 
 = 1.0.1 =
-* Fix: The refresh email lists button hangs when clicked - https://github.com/WordImpress/Give-AWeber/issues/2
+* Fix: The refresh email lists button hangs when clicked - https://github.com/impress-org/give-aweber/issues/2
 
 = 1.0 =
 * Initial plugin release. Yippee!

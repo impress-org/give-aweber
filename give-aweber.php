@@ -4,8 +4,8 @@
  * Plugin URI: https://givewp.com/addons/aweber/
  * Description: Easily integrate AWeber opt-ins within your Give donation forms.
  * Version: 1.0.4
- * Author: WordImpress
- * Author URI: https://wordimpress.com
+ * Author: GiveWP
+ * Author URI: https://givewp.com
  * Text Domain: give-aweber
  */
 

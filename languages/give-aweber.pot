@@ -1,14 +1,14 @@
-# Copyright (C) 2018 Give - AWeber
+# Copyright (C) 2019 Give - AWeber
 # This file is distributed under the same license as the Give - AWeber package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Give - AWeber\n"
-"Report-Msgid-Bugs-To: https://github.com/WordImpress/Give-AWeber\n"
+"Report-Msgid-Bugs-To: https://github.com/impress-org/give-aweber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
-"Language-Team: WordImpress <info@wordimpress.com>\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"Language-Team: GiveWP <info@givewp.com>\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
@@ -16,154 +16,150 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: includes/class-give-aweber.php:76, includes/class-give-aweber.php:359
+#: give-aweber.php:150, give-aweber.php:438
 msgid "Signup for the newsletter"
 msgstr ""
 
-#: includes/class-give-aweber.php:174, includes/class-give-aweber.php:641
+#: give-aweber.php:253, give-aweber.php:738
 msgid "Subscribe to our newsletter"
 msgstr ""
 
-#: includes/class-give-aweber.php:327
+#: give-aweber.php:406
 msgid "Opted-in"
 msgstr ""
 
-#: includes/class-give-aweber.php:371
+#: give-aweber.php:450
 msgid "AWeber Options"
 msgstr ""
 
-#: includes/class-give-aweber.php:373
+#: give-aweber.php:452
 msgid "Customize the options for this form or use the default global settings."
 msgstr ""
 
-#: includes/class-give-aweber.php:381, includes/class-give-aweber.php:428
+#: give-aweber.php:460, give-aweber.php:507
 msgid "Use Default"
 msgstr ""
 
-#: includes/class-give-aweber.php:389
+#: give-aweber.php:468
 msgid "Customize"
 msgstr ""
 
-#: includes/class-give-aweber.php:396, includes/class-give-aweber.php:613
+#: give-aweber.php:475, give-aweber.php:710
 msgid "Disabled"
 msgstr ""
 
-#: includes/class-give-aweber.php:404
+#: give-aweber.php:483
 msgid "Custom Label"
 msgstr ""
 
-#: includes/class-give-aweber.php:406
+#: give-aweber.php:485
 msgid "Customize the label for the %1$s opt-in checkbox"
 msgstr ""
 
-#: includes/class-give-aweber.php:417, includes/class-give-aweber.php:625
+#: give-aweber.php:496, give-aweber.php:722
 msgid "Opt-in Default"
 msgstr ""
 
-#: includes/class-give-aweber.php:419
+#: give-aweber.php:498
 msgid "Customize the newsletter opt-in option for this form."
 msgstr ""
 
-#: includes/class-give-aweber.php:436, includes/class-give-aweber.php:628
+#: give-aweber.php:515, give-aweber.php:725
 msgid "Checked"
 msgstr ""
 
-#: includes/class-give-aweber.php:443, includes/class-give-aweber.php:629
+#: give-aweber.php:522, give-aweber.php:726
 msgid "Unchecked"
 msgstr ""
 
-#: includes/class-give-aweber.php:452
+#: give-aweber.php:531
 msgid "AWeber Lists"
 msgstr ""
 
-#: includes/class-give-aweber.php:457, includes/class-give-aweber.php:800
+#: give-aweber.php:536, give-aweber.php:903
 msgid "Refresh Lists"
 msgstr ""
 
-#: includes/class-give-aweber.php:461
+#: give-aweber.php:540
 msgid "Customize the lists and/or groups you wish donors to subscribe to."
 msgstr ""
 
-#: includes/class-give-aweber.php:594
-msgid "AWeber Settings"
+#: give-aweber.php:672
+msgid "Aweber Settings"
 msgstr ""
 
-#: includes/class-give-aweber.php:600
+#: give-aweber.php:697
 msgid "AWeber Authorization Code"
 msgstr ""
 
-#: includes/class-give-aweber.php:601
+#: give-aweber.php:698
 msgid "Retrieve your <a href=\"%s\" target=\"_blank\" title=\"Will open new window\">AWeber Authorization Code</a> and paste it above then save to enable the AWeber integration."
 msgstr ""
 
-#: includes/class-give-aweber.php:607
+#: give-aweber.php:704
 msgid "Enable Globally"
 msgstr ""
 
-#: includes/class-give-aweber.php:608
+#: give-aweber.php:705
 msgid "Allow donors to sign up for the list selected below on all donation forms? Note: the list(s) can be customized per form."
 msgstr ""
 
-#: includes/class-give-aweber.php:612
+#: give-aweber.php:709
 msgid "Enabled"
 msgstr ""
 
-#: includes/class-give-aweber.php:618
+#: give-aweber.php:715
 msgid "Choose a List"
 msgstr ""
 
-#: includes/class-give-aweber.php:619
+#: give-aweber.php:716
 msgid "Select the list you wish to subscribe donors."
 msgstr ""
 
-#: includes/class-give-aweber.php:626
+#: give-aweber.php:723
 msgid "Would you like the newsletter opt-in checkbox checked by default? This option can be customized per form."
 msgstr ""
 
-#: includes/class-give-aweber.php:636
+#: give-aweber.php:733
 msgid "Default Label"
 msgstr ""
 
-#: includes/class-give-aweber.php:637
+#: give-aweber.php:734
 msgid "This is the text shown next to the signup option. This can also be customized per form."
 msgstr ""
 
-#: includes/class-give-aweber.php:745
+#: give-aweber.php:844
 msgid "Unable to connect to your AWeber Account:"
 msgstr ""
 
-#: includes/class-give-aweber.php:749
+#: give-aweber.php:848
 msgid "Authorization code entered was:"
 msgstr ""
 
-#: includes/class-give-aweber.php:752
+#: give-aweber.php:851
 msgid "Please make sure you entered the complete authorization code and try again."
 msgstr ""
 
-#: includes/class-give-aweber.php:791
-msgid ""
+#: give-aweber.php:1055
+msgid "<strong>Activation Error:</strong> You must have the <a href=\"%s\" target=\"_blank\">Give</a> plugin installed and activated for Give - Aweber to activate."
 msgstr ""
 
-#: includes/give-aweber-activation.php:74
+#: give-aweber.php:1082
+msgid "<strong>Activation Error:</strong> You must have the <a href=\"%s\" target=\"_blank\">Give</a> core version %s for the Give - Aweber add-on to activate."
+msgstr ""
+
+#: includes/give-aweber-activation.php:39
 msgid "AWeber"
 msgstr ""
 
-#: includes/give-aweber-activation.php:98
-msgid "<strong>Activation Error:</strong> You must have the <a href=\"https://givewp.com/\" target=\"_blank\">Give</a> plugin installed and activated for the AWeber add-on to activate."
-msgstr ""
-
-#: includes/give-aweber-activation.php:107
-msgid "<strong>Activation Error:</strong> You must have <a href=\"%s\" target=\"_blank\">Give</a> version %s+ for the AWeber add-on to activate."
-msgstr ""
-
-#: includes/give-aweber-activation.php:125
+#: includes/give-aweber-activation.php:68
 msgid "Settings"
 msgstr ""
 
-#: includes/give-aweber-activation.php:159
+#: includes/give-aweber-activation.php:102
 msgid "Documentation"
 msgstr ""
 
-#: includes/give-aweber-activation.php:169
+#: includes/give-aweber-activation.php:112
 msgid "Add-ons"
 msgstr ""

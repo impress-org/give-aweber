@@ -20,9 +20,9 @@ gulp.task('pot', function () {
             package: 'Give - AWeber',
             domain: 'give-aweber', //textdomain
             destFile: 'give-aweber.pot',
-            bugReport: 'https://github.com/WordImpress/Give-AWeber',
+            bugReport: 'https://github.com/impress-org/give-aweber',
             lastTranslator: '',
-            team: 'WordImpress <info@wordimpress.com>'
+            team: 'GiveWP <info@givewp.com>'
         }))
         .pipe(gulp.dest('languages'));
 });
