@@ -1,7 +1,7 @@
 === Give - AWeber ===
 Contributors: givewp
 Tags: give, aweber, newsletter, email marketing
-Requires at least: 4.5
+Requires at least: 4.8
 Tested up to: 4.9
 Stable tag: 1.0.4
 Requires Give: 2.5.0
@@ -18,8 +18,8 @@ This plugin requires the Give plugin activated to function properly. When activa
 
 = Minimum Requirements =
 
-* WordPress 4.5 or greater
-* PHP version 5.3 or greater
+* WordPress 4.8 or greater
+* PHP version 5.4 or greater
 * MySQL version 5.0 or greater
 
 = Automatic installation =
@@ -35,6 +35,9 @@ The manual installation method involves downloading our donation plugin and uplo
 Automatic updates should work like a charm; as always though, ensure you backup your site just in case.
 
 == Changelog ==
+
+= 1.0.4: July 11th, 2019 =
+* Tweak: Removed deprecated hooks for added compatibility for Give Core 2.5.0+. Note: Please ensure you are using the latest version of Give Core prior to updating.
 
 = 1.0.3: May 3rd, 2018 =
 * Tweak: Updated hooks to be compatibile with Give Core 2.1+ - please update to the latest Give Core version!
