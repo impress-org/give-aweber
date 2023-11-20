@@ -10,6 +10,8 @@
  */
 
 //Define constants.
+use Give\Log\Log;
+
 if ( ! defined( 'GIVE_AWEBER_VERSION' ) ) {
 	define( 'GIVE_AWEBER_VERSION', '1.0.4' );
 }
@@ -442,6 +444,8 @@ class Give_AWeber {
 		$override_option  = get_post_meta( $post->ID, '_give_' . $this->id . '_override_option', true );
 		$checked_option   = get_post_meta( $post->ID, '_give_' . $this->id . '_checked_default', true );
 
+
+
 		//Start the buffer.
 		ob_start(); ?>
 
@@ -625,6 +629,9 @@ class Give_AWeber {
 	public function get_lists() {
 
 		$lists_data = get_transient( 'give_aweber_lists' );
+    $lists_not_found = array(
+        'unknown' => __( 'No lists found', 'give-aweber' )
+      );
 
 		if ( false === $lists_data ) {
 
@@ -633,7 +640,7 @@ class Give_AWeber {
 				$aweber = $this->get_authenticated_instance();
 
 				if ( ! is_object( $aweber ) || false === ( $secrets = get_option( 'give_aweber_secrets' ) ) ) {
-					return array();
+					return $lists_not_found;
 				}
 
 				$account = $aweber->getAccount( $secrets['access_key'], $secrets['access_secret'] );
@@ -648,7 +655,7 @@ class Give_AWeber {
 
 			} catch ( Exception $e ) {
 
-				$this->lists = array();
+				$this->lists = $lists_not_found;
 
 			}
 
@@ -817,6 +824,8 @@ class Give_AWeber {
 
 				} catch ( AWeberAPIException $exc ) {
 
+          Log::error( 'AWeber API Error (AWeberAPIException): ' . $exc->getMessage() );
+
 					list( $consumer_key, $consumer_secret, $access_key, $access_secret ) = null;
 
 					//make error messages customer friendly.
@@ -826,10 +835,12 @@ class Give_AWeber {
 					$error_code = " ($descr)";
 
 				} catch ( AWeberOAuthDataMissing $exc ) {
+          Log::error( 'AWeber API Error (AWeberOAuthDataMissing): ' . $exc->getMessage() );
 
 					list( $consumer_key, $consumer_secret, $access_key, $access_secret ) = null;
 
 				} catch ( AWeberException $exc ) {
+          Log::error( 'AWeber API Error (AWeberException): ' . $exc->getMessage() );
 
 					list( $consumer_key, $consumer_secret, $access_key, $access_secret ) = null;
 
@@ -848,7 +859,7 @@ class Give_AWeber {
 						$msg .= __( 'Authorization code entered was:', 'give-aweber' ) . '<br />' . $authorization_code;
 					}
 
-					$msg .= __( 'Please make sure you entered the complete authorization code and try again.', 'give-aweber' );
+					$msg .= '<br />' . __( 'Please make sure you entered the complete authorization code and try again.', 'give-aweber' );
 
 					$msg .= '</div>';
 
@@ -883,6 +894,7 @@ class Give_AWeber {
 	public function aweber_list_select( $field, $value ) {
 
 		$lists = $this->get_lists();
+    $give_aweber_response = get_option('give_aweber_response');
 
 		ob_start(); 
 		?>
@@ -904,6 +916,11 @@ class Give_AWeber {
 				<span class="give-spinner spinner"></span>
 
 				<p class="give-field-description"><?php echo "{$field['desc']}"; ?></p>
+        <?php if ( ! empty( $give_aweber_response ) ) : ?>
+          <div class="give-aweber-response">
+            <?php echo $give_aweber_response; ?>
+          </div>
+        <?php endif; ?>
 			</td>
 		</tr>
 		<?php 
