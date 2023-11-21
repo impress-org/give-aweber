@@ -45,9 +45,12 @@ jQuery(document).ready(function ($) {
 						$('.give-aweber-list-wrap').empty().append(res.data.lists);
 					}
 
-					refresh_button.hide();
+					//refresh_button.hide();
 					spinner.removeClass('is-active');
 				}
+			},
+			error: function (res) {
+				console.error({aweberListErrorResponse: res});
 			}
 		});
 	});
