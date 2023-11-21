@@ -10,6 +10,8 @@
  */
 
 //Define constants.
+use Give\Log\Log;
+
 if ( ! defined( 'GIVE_AWEBER_VERSION' ) ) {
 	define( 'GIVE_AWEBER_VERSION', '1.0.4' );
 }
@@ -442,6 +444,8 @@ class Give_AWeber {
 		$override_option  = get_post_meta( $post->ID, '_give_' . $this->id . '_override_option', true );
 		$checked_option   = get_post_meta( $post->ID, '_give_' . $this->id . '_checked_default', true );
 
+
+
 		//Start the buffer.
 		ob_start(); ?>
 
@@ -625,6 +629,9 @@ class Give_AWeber {
 	public function get_lists() {
 
 		$lists_data = get_transient( 'give_aweber_lists' );
+    $lists_not_found = array(
+        'unknown' => __( 'No lists found', 'give-aweber' )
+      );
 
 		if ( false === $lists_data ) {
 
@@ -633,7 +640,7 @@ class Give_AWeber {
 				$aweber = $this->get_authenticated_instance();
 
 				if ( ! is_object( $aweber ) || false === ( $secrets = get_option( 'give_aweber_secrets' ) ) ) {
-					return array();
+					return $lists_not_found;
 				}
 
 				$account = $aweber->getAccount( $secrets['access_key'], $secrets['access_secret'] );
@@ -648,7 +655,7 @@ class Give_AWeber {
 
 			} catch ( Exception $e ) {
 
-				$this->lists = array();
+				$this->lists = $lists_not_found;
 
 			}
 
@@ -781,7 +788,8 @@ class Give_AWeber {
 	 */
 	public function get_authenticated_instance() {
 
-		$authorization_code = isset( $this->give_options['give_aweber_api'] ) ? trim( $this->give_options['give_aweber_api'] ) : '';
+		//$authorization_code = isset( $this->give_options['give_aweber_api'] ) ? trim( $this->give_options['give_aweber_api'] ) : '';
+		$authorization_code = give_get_option('give_aweber_api', '');
 
 		$msg = '';
 		if ( ! empty( $authorization_code ) ) {
@@ -798,6 +806,9 @@ class Give_AWeber {
 				$msg     = $options;
 
 				try {
+           if (!$this->validate_auth_code()){
+              throw new \RuntimeException('AWeber API Error: Authorization code does not match stored credentials.');
+           }
 
 					$api = new AWeberAPI( $options['consumer_key'], $options['consumer_secret'] );
 
@@ -805,7 +816,16 @@ class Give_AWeber {
 
 					$api = false;
 
-				}
+				} catch ( RuntimeException $exc ) {
+          Log::error( 'AWeber API Error (Exception): ' . $exc->getMessage() );
+
+          delete_transient( 'give_aweber_lists' );
+          give_delete_option('give_aweber_list');
+			    delete_option( 'give_aweber_secrets' );
+
+          $api = false;
+
+        }
 
 				return $api;
 
@@ -817,6 +837,8 @@ class Give_AWeber {
 
 				} catch ( AWeberAPIException $exc ) {
 
+          Log::error( 'AWeber API Error (AWeberAPIException): ' . $exc->getMessage() );
+
 					list( $consumer_key, $consumer_secret, $access_key, $access_secret ) = null;
 
 					//make error messages customer friendly.
@@ -826,10 +848,12 @@ class Give_AWeber {
 					$error_code = " ($descr)";
 
 				} catch ( AWeberOAuthDataMissing $exc ) {
+          Log::error( 'AWeber API Error (AWeberOAuthDataMissing): ' . $exc->getMessage() );
 
 					list( $consumer_key, $consumer_secret, $access_key, $access_secret ) = null;
 
 				} catch ( AWeberException $exc ) {
+          Log::error( 'AWeber API Error (AWeberException): ' . $exc->getMessage() );
 
 					list( $consumer_key, $consumer_secret, $access_key, $access_secret ) = null;
 
@@ -848,7 +872,7 @@ class Give_AWeber {
 						$msg .= __( 'Authorization code entered was:', 'give-aweber' ) . '<br />' . $authorization_code;
 					}
 
-					$msg .= __( 'Please make sure you entered the complete authorization code and try again.', 'give-aweber' );
+					$msg .= '<br />' . __( 'Please make sure you entered the complete authorization code and try again.', 'give-aweber' );
 
 					$msg .= '</div>';
 
@@ -865,6 +889,8 @@ class Give_AWeber {
 				}
 			}
 		} else {
+      delete_transient( 'give_aweber_lists' );
+      give_delete_option('give_aweber_list');
 			delete_option( 'give_aweber_secrets' );
 		}
 
@@ -881,8 +907,8 @@ class Give_AWeber {
 	 * @param $value
 	 */
 	public function aweber_list_select( $field, $value ) {
-
 		$lists = $this->get_lists();
+    $give_aweber_response = get_option('give_aweber_response');
 
 		ob_start(); 
 		?>
@@ -893,6 +919,9 @@ class Give_AWeber {
 				</label>
 			</th>
 			<td scope="row" class="">
+        <?php if ( empty( give_get_option('give_aweber_api') ) ) : ?>
+          <p><?php echo __( 'Please enter your AWeber Authorization Code in the settings tab above.', 'give-aweber' ); ?></p>
+        <?php else: ?>
 				<select class="give-select give-aweber-list-select" name="<?php echo "{$field['id']}"; ?>"
 						id="<?php echo "{$field['id']}"; ?>">
 					<?php echo $this->get_list_options( $lists, $value ); ?>
@@ -904,6 +933,12 @@ class Give_AWeber {
 				<span class="give-spinner spinner"></span>
 
 				<p class="give-field-description"><?php echo "{$field['desc']}"; ?></p>
+        <?php if ( ! empty( $give_aweber_response ) ) : ?>
+          <div class="give-aweber-response">
+            <?php echo $give_aweber_response; ?>
+          </div>
+        <?php endif; ?>
+        <?php endif; ?>
 			</td>
 		</tr>
 		<?php 
@@ -1086,6 +1121,34 @@ class Give_AWeber {
 
 		return $is_working;
 	}
+
+    /**
+     * @unreleased
+     * @return bool
+     */
+  public function validate_auth_code(){
+    	if ( ! class_exists( 'AWeberAPI' ) ) {
+				require_once( GIVE_AWEBER_PATH . '/aweber/aweber_api.php' );
+			}
+
+      $authorization_code = give_get_option('give_aweber_api', '');
+      $options = get_option( 'give_aweber_secrets' );
+
+      if (empty($options) || empty($authorization_code)){
+          return false;
+      }
+
+      try {
+          list($consumer_key, $consumer_secret) = AWeberAPI::getDataFromAweberID(
+              $authorization_code
+          );
+
+          return !($consumer_secret !== $options['consumer_secret'] || $consumer_key !== $options['consumer_key']);
+      } catch (Exception $exc) {
+          Log::error('AWeber API Error (Exception): ' . $exc->getMessage());
+          return false;
+      }
+  }
 
 }
 
